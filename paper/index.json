@@ -1,0 +1,7 @@
+{   
+    "comment":"文章数量=index长度",
+    "index":[
+        {"year":"2022","month":"09","day":"02","paper":1,"title":"hello world"},
+        {"year":"2022","month":"09","day":"02","paper":2,"title":"first paper"}
+    ]
+}
