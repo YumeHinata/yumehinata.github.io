@@ -6,10 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="./js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <!-- <script src="./paper/index.json" type="text/javascript" charset="utf-8"></script> -->
+    <!-- <script src="https://cdn.skypack.dev/-/@octokit/core@v4.0.5-DCTGyLHthf6deTvrXINL/dist=es2019,mode=raw/optimized/@octokit/core.js" type="text/javascript" charset="utf-8"></script> -->
+    <script type="module" >
+        import { Octokit, App } from "https://cdn.skypack.dev/octokit";
+        // import indexJson from './paper/index.json';
+    </script>
+    <link rel="stylesheet" href="./css/index.css">
+    <script src="./js/index.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
     <div id="app">{{ message }}</div>
-    <div id="list">{{ list }}</div>
+    <!-- 需要一个归档功能 -->
+    <div id="archive">
+        归档
+    </div>
+    <!-- 需要一个显示最新的文章 -->
+    <div id="primary">
+        文章
+        <!-- 需要每一篇一个div，其中包含头图、标题、摘要、发布时间、分类 -->
+        <div class="post">
+            <div class="post-thumb">我是头图</div>
+            <div class="post-content-wrap">
+                <div class="post-content">
+                    <div class="post-date">{{ post-date }}</div>
+                    <div class="post-title">{{ post-title }}</div>
+                    <div class="post-mate">我也许需要一个分类吧</div>
+                    <div class="float-content">这里面写摘要</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <footer>
     <script src="./js/1.js" type="text/javascript" charset="utf-8"></script>
