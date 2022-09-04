@@ -1,0 +1,11 @@
+{
+    "userName":"YumeHinata",
+    "nav":[
+        {"name":"首页","url":"/"},
+        {"name":"第一","url":"/"},
+        {"name":"第二","url":"/"},
+        {"name":"第三","url":"/"},
+        {"name":"第四","url":"/"},
+        {"name":"第五","url":"/"}
+    ]
+}

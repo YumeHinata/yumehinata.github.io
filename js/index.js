@@ -62,6 +62,35 @@ useJson("./paper/index.json",function(){
         }
     }
 });
-
 // 加载发现页部分
+
+// 侧边栏功能
+// 引入config.json完成部分页面
+useJson("./page/config/config.json",function(){
+    // 获取头像、昵称、主页
+    userName = json.userName
+    navS = json.nav
+    var navMenu = document.getElementById("nav-menu");
+    useJson("https://api.github.com/users/"+userName,function(){
+        var sidebarAvatar = document.getElementsByClassName("sidebar-avatar")[0];
+        var LoginName = document.getElementsByClassName("login")[0];
+        var followGithub = document.getElementsByClassName("follow")[0];
+        avatarUrl = json.avatar_url;
+        login = json.login;
+        // console.log(avatarUrl)
+        sidebarAvatar.style.backgroundImage = "url("+avatarUrl+")";
+        LoginName.innerHTML = login;
+        followGithub.onclick = function(){
+            window.open(json.html_url);
+        }
+    });
+    // 导航栏可根据cfg.json文件修改
+    for(a=0;a < navS.length;a++){
+        navName=navS[a].name;
+        navUrl=navS[a].url;
+        navMenu.innerHTML += '<li><a href="'+navUrl+'">'+navName+'</a></li>';
+    }
+});
+// 利用cookie存储token
+
 }

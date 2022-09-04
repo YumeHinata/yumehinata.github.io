@@ -5,6 +5,7 @@
     height: 75px;
     width: 100%;
     position: fixed;
+    z-index: 9999;
 }
 #nav-container {
     // background-color: aliceblue;
@@ -44,12 +45,13 @@
     display: flex;
     width: 100%;
     flex-direction: row-reverse;
+    position: relative;
 }
 #sidebar {
     width: 400px;
     // height: 600px;
     // background-color: antiquewhite;
-    // position: sticky;
+    // position: absolute;
 }
 #account {
     display: flex;
@@ -66,6 +68,7 @@
         border-radius: 50%;
         border: 5px rgb(221, 221, 221) solid;
         box-shadow: 0px 0px 6px rgb(221, 221, 221);
+        background-size: cover;
     }
     .token {
         margin: 15px;
@@ -89,6 +92,13 @@
         border-radius: 15px;
         box-shadow: 0 0 3px rgb(221, 221, 221);
     }
+    .login {
+        height: 25px;
+        color: rgb(142, 142, 142);
+        font-size: 20px;
+        line-height: 25px;
+        text-align: center;
+    }
 }
 #test {
     height: 2000px;
@@ -96,7 +106,7 @@
 #archive {
     /* display: flex; */
     // background-color: aqua;
-    width: 100%;
+    width: auto;
     margin-left: 20px;
     margin-right: 20px;
     h4{
