@@ -1,3 +1,5 @@
+window.onload = function(){
+//引入json文件的函数
 function useJson(url,fun){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function()  {
@@ -9,6 +11,15 @@ function useJson(url,fun){
     xmlhttp.open("GET", url , true);
     xmlhttp.send();
 }
+// 橱窗大小随着窗口变化
+window.onresize = function(){
+    var showcaseHeight = window.innerHeight;
+    document.getElementById("showcase");
+    showcase.style.height = showcaseHeight+"px";
+}
+var showcaseHeight = window.innerHeight;
+document.getElementById("showcase");
+showcase.style.height = showcaseHeight+"px";
 // 获取归档json，以生成归档
 useJson("./paper/index.json",function(){
     indexYear=[0];
@@ -27,10 +38,9 @@ useJson("./paper/index.json",function(){
             }
         }
         if(y==1){
-            indexYear.push(x)
+            indexYear.push(x);
             indexMonth=[0];
             var archive = document.getElementById("archive")
-            // console.log(archive)
             archive.innerHTML = archive.innerHTML + '<div class="aYear '+x+'">'+x+'年'+'</div>'
         }
         // 有相同的年份则进行判定月份
@@ -40,18 +50,18 @@ useJson("./paper/index.json",function(){
             }
         }
         if(m==1){
-            indexMonth.push(c)
+            indexMonth.push(c);
             indexDay=[0];
-            var aYear = document.getElementsByClassName(x)[0]
-            // console.log(aYear)
-            aYear.innerHTML = aYear.innerHTML + '<div class="aMonth '+c+'">'+c+'月'+'</div>'
+            var aYear = document.getElementsByClassName(x)[0];
+            aYear.innerHTML = aYear.innerHTML + '<div class="aMonth '+c+'">'+c+'月'+'</div>';
         }
         // 日期+标题
         for(q=0; q < indexDay.length;q++){
             var aMonth = document.getElementsByClassName(x)[0].getElementsByClassName(c)[0];
-            // console.log(aYear)
-            aMonth.innerHTML = aMonth.innerHTML + '<div class="aDay '+e+'">'+e+'日·'+t+'</div>'
+            aMonth.innerHTML = aMonth.innerHTML + '<div class="aDay '+e+'">'+e+'日 · '+t+'</div>';
         }
     }
 });
 
+// 加载发现页部分
+}
