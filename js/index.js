@@ -92,5 +92,17 @@ useJson("./page/config/config.json",function(){
     }
 });
 // 利用cookie存储token
-
+var userToken = document.getElementsByClassName("token")[0];
+if(document.cookie != null && document.cookie != '' && document.cookie != "token="){
+    userToken.placeholder = "已经接收到token喽(*^▽^*)" ;
+}
+userToken.onblur = function(){
+    if(userToken.value != ""){
+        document.cookie = "token=" + userToken.value + ";expires=Mon, 01 Jan 2035 00:00:00 UTC;path=/";
+        userToken.placeholder = "已经接收到token喽(*^▽^*)";
+        userToken.value="";
+    }else{
+        userToken.placeholder = "!!!∑(ﾟДﾟノ)ノ输入的好像不对"
+    }
+}
 }
