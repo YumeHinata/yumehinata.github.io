@@ -11,6 +11,18 @@ function useJson(url,fun){
     xmlhttp.open("GET", url , true);
     xmlhttp.send();
 }
+// 读取cookie中token的函数
+function readToken(){
+    token="";
+    s = document.cookie;
+    for(i=0;i<s.length;i++){
+      token += s[i];
+      if(token=="token="){
+        token='';
+      }
+    }
+    return token;
+}
 // 橱窗大小随着窗口变化
 window.onresize = function(){
     var showcaseHeight = window.innerHeight;
@@ -103,6 +115,12 @@ userToken.onblur = function(){
         userToken.value="";
     }else{
         userToken.placeholder = "!!!∑(ﾟДﾟノ)ノ输入的好像不对"
+    }
+}
+// input获取焦点如有cookie则value是token
+userToken.onfocus = function(){
+    if(document.cookie != null && document.cookie != '' && document.cookie != "token="){
+        userToken.value = readToken();
     }
 }
 }
