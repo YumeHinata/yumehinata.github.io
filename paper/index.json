@@ -1,12 +1,12 @@
 {      
     "index":[
-        {"year":"2022","month":"09","day":"02","paper":1,"title":"hello world"},
-        {"year":"2022","month":"09","day":"02","paper":2,"title":"first paper"},
-        {"year":"2023","month":"07","day":"02","paper":1,"title":"first pafsgsper"},
-        {"year":2023,"month":"07","day":"13","paper":1,"title":"first papehfr"},
-        {"year":2023,"month":"08","day":"02","paper":1,"title":"firsg,gkt paper"},
-        {"year":2024,"month":"09","day":"03","paper":1,"title":"firsthklh paper"},
-        {"year":2024,"month":"09","day":"06","paper":1,"title":"first pgkghkaper"},
-        {"year":2025,"month":"03","day":"07","paper":1,"title":"first 'kjjpaper"}
+        {"year":"2022","month":"09","day":"02","paper":1,"title":"hello world","image":"./img/2.jpg"},
+        {"year":"2022","month":"09","day":"02","paper":2,"title":"first paper","image":""},
+        {"year":"2023","month":"07","day":"02","paper":1,"title":"first pafsgsper","image":""},
+        {"year":2023,"month":"07","day":"13","paper":1,"title":"first papehfr","image":""},
+        {"year":2023,"month":"08","day":"02","paper":1,"title":"firsg,gkt paper","image":""},
+        {"year":2024,"month":"09","day":"03","paper":1,"title":"firsthklh paper","image":""},
+        {"year":2024,"month":"09","day":"06","paper":1,"title":"first pgkghkaper","image":""},
+        {"year":2025,"month":"03","day":"07","paper":1,"title":"first 'kjjpaper","image":""}
     ]
 }

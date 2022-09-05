@@ -75,10 +75,40 @@ useJson("./paper/index.json",function(){
     }
 });
 // 加载发现页部分
-
+useJson("./paper/index.json",function(){
+    var mainPaper = document.getElementById("main");
+    for(i=0;i < json.index.length;i++){
+        index = json.index[i];
+        paperDate="";
+        if(i%2!=0){
+            x="left"
+        }else{
+            x="right"
+        }
+        paperDate = index.year + '-' + index.month + '-' + index.day;
+        paperUrl = paperDate + "-" + index.paper
+        paperTitle = index.title;
+        mainPaper.innerHTML += '<div class="post ' + x + " " + paperUrl + '"><div class="post-thumb"></div><div class="post-content-wrap"><div class="post-content"><div class="post-date">' + paperDate + '</div><div class="post-title">' + paperTitle + '</div><div class="post-mate"></div><div class="float-content"></div></div></div></div>';
+        thisPaper = document.getElementsByClassName(paperUrl)[0].getElementsByClassName("post-thumb")[0];
+        thisPaper.style.backgroundImage = 'url(' + index.image + ')';
+    }
+    // 绑定点击事件
+    var paperPost = document.getElementsByClassName("post");
+    for(i=0;i < paperPost.length;i++){
+        paperPost[i].onclick = function(){
+            openPaperUrl = this.className.match(/[0-9]|-/ig);
+            for(z=0;z < openPaperUrl.length;z++){
+                var v = v + openPaperUrl[z];
+            }
+            window.open("./page/paper.html?"+v);
+        }
+    }
+});
 // 侧边栏功能
 // 引入config.json完成部分页面
 useJson("./page/config/config.json",function(){
+    // 顺便完成网站标题和图标
+    document.title = json.sideName;
     // 获取头像、昵称、主页
     userName = json.userName
     navS = json.nav

@@ -5,6 +5,7 @@
     height: 75px;
     width: 100%;
     position: fixed;
+    box-shadow: 0 0 25px rgb(137, 137, 137);
     z-index: 9999;
 }
 #nav-container {
@@ -46,13 +47,16 @@
     width: 100%;
     flex-direction: row-reverse;
     position: relative;
+    box-shadow: 0 0 20px rgb(137, 137, 137);
 }
 #sidebar {
-    width: 400px;
+    width: 550px;
     // height: 100%;
     // background-color: antiquewhite;
     // position: absolute;
     border-left: 1px rgb(232, 232, 232) solid;
+    background-color: #fff;
+    z-index: 999;
 }
 #account {
     display: flex;
@@ -166,14 +170,36 @@
         width: 485px;
         // background-color: bisque;
         border-radius: 15px 0 0 15px;
+        background-position: center;
+        background-size: cover;
     }
     .post-content-wrap {
         width: 300px;
-        background-color: azure;
+        // background-color: azure;
         border-radius: 0 15px 15px 0;
+        text-align: right;
+        // padding: 20px 40px;
     }
-}
-
-.post-content-wrap .post-content {
-    float: right;
+    .post-content {
+        margin: 20px 40px;
+    }
+    .left {
+        flex-direction: row;
+        .post-content-wrap {
+            border-left: 3px rgb(142, 142, 142) dashed;
+        }
+    }
+    .right {
+        flex-direction: row-reverse;
+        .post-content{
+        text-align: left;
+        }
+        .post-content-wrap {
+            border-radius: 15px 0 0 15px;
+            border-right: 3px rgb(142, 142, 142) dashed;
+        }
+        .post-thumb {
+            border-radius: 0 15px 15px 0;
+        }
+    }
 }
