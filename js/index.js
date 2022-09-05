@@ -96,9 +96,11 @@ useJson("./paper/index.json",function(){
     var paperPost = document.getElementsByClassName("post");
     for(i=0;i < paperPost.length;i++){
         paperPost[i].onclick = function(){
+            var v = "";
             openPaperUrl = this.className.match(/[0-9]|-/ig);
-            for(z=0;z < openPaperUrl.length;z++){
-                var v = v + openPaperUrl[z];
+            for(z=0;z < openPaperUrl.length;z++){ 
+                v += openPaperUrl[z];
+                // console.log(v);
             }
             window.open("./page/paper.html?"+v);
         }
