@@ -21,5 +21,8 @@ useJson("/page/config/config.json",function(){
         navMenu.innerHTML += '<li><a href="'+navUrl+'">'+navName+'</a></li>';
     }
 });
-
+// 加载标题和头图
+useJson("/paper/index.json",function(){
+    
+});
 }

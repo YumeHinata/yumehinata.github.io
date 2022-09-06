@@ -36,6 +36,7 @@ showcase.style.height = showcaseHeight+"px";
 useJson("./paper/index.json",function(){
     indexYear=[0];
     indexMonth=[0];
+    // console.log(json.search.length)
     for(a=0;a < json.index.length;a++){
         index=json.index;
         var x=index[a].year;

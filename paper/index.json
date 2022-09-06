@@ -8,5 +8,45 @@
         {"year":2024,"month":"09","day":"03","paper":1,"title":"firsthklh paper","image":""},
         {"year":2024,"month":"09","day":"06","paper":1,"title":"first pgkghkaper","image":""},
         {"year":2025,"month":"03","day":"07","paper":1,"title":"first 'kjjpaper","image":""}
-    ]
+    ],
+    "search":{
+        "2022":{
+            "09":{
+                "02":{
+                    "1":{
+                        "title":"hello world",
+                        "image":"./img/2.jpg"
+                    },
+                    "2":{
+                        "title":"first paper",
+                        "image":""
+                    }
+                }
+            }
+        },
+        "2023":{
+            "07":{
+                "2":{
+                    "1":{
+                        "title":"first pafsgsper",
+                        "image":""
+                    }
+                },
+                "13":{
+                    "1":{
+                        "title":"first papehfr",
+                        "image":""   
+                    }
+                }
+            },
+            "08":{
+                "02":{
+                    "1":{
+                        "title":"firsg,gkt paper",
+                        "image":""   
+                    }
+                }
+            }
+        }
+    }
 }
