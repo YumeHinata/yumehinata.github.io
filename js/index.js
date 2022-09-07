@@ -103,7 +103,7 @@ useJson("./paper/index.json",function(){
                 v += openPaperUrl[z];
                 // console.log(v);
             }
-            window.open("./page/paper.html?"+v);
+            window.open("./page/paper.html?number="+v);
         }
     }
 });
