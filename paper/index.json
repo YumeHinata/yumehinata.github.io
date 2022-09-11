@@ -15,7 +15,7 @@
                 "02":{
                     "1":{
                         "title":"hello world",
-                        "image":"./img/2.jpg"
+                        "image":"../img/2.jpg"
                     },
                     "2":{
                         "title":"first paper",

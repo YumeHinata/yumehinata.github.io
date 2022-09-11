@@ -23,7 +23,50 @@ useJson("/page/config/config.json",function(){
 });
 // 加载标题和头图
 useJson("/paper/index.json",function(){
-
+    var search = json.search;
+    var sHref = window.location.search;
+    var Year="";
+    var Month="";
+    var Day="";
+    var Paper=""
+    if(sHref.search("&")==-1){
+        var num = sHref.match(/(number=(\S*))/)[2];
+    }else{
+        var num = sHref.match(/(number=(\S*)&)/)[2];
+    }
+    q="";
+    w="";
+    e="";
+    for(i=0;i< num.length;i++){
+        q += num[i];
+        if(num[i]=="-"){
+            Year=q;
+            num = num.replace(Year,"")
+            // q="";
+            for(z=0;z<num.length;z++){
+                w += num[z];
+                if(num[z]=="-"){
+                    Month=w;
+                    num = num.replace(Month,"")
+                    for(x=0;x<num.length;x++){
+                        e += num[x];
+                        if(num[x]=="-"){
+                            Day=e;
+                            num = num.replace(Day,"")
+                            paper=num;
+                            Day = Day.replace(/-/g,'');
+                            Month = Month.replace(/-/g,'');
+                            Year = Year.replace(/-/g,'');
+                        }
+                    }
+                }
+            }
+        }
+    }
+    search=search[Year][Month][Day][paper];
+    document.title=search.title;
+    document.getElementsByClassName("pattern-title")[0].innerHTML=search.title;
+    document.getElementsByClassName("pattern-attachment")[0].style.backgroundImage = "url(" + search.image +")";
 });
 }
 // 加载md
@@ -35,7 +78,7 @@ $(function(){
             //htmlDecode      : true,       // 开启 HTML 标签解析，为了安全性，默认不开启
             htmlDecode      : "style,script,iframe",  // you can filter tags decode
             // toc             : true,
-            tocm            : true,    // Using [TOCM]
+            // tocm            : true,    // Using [TOCM]
             tocContainer    : "#table-content", // 自定义 ToC 容器层
             //gfm             : false,
             // tocDropdown     : true,
@@ -48,8 +91,9 @@ $(function(){
         });
     });
     // 设置toc高度
-    document.getElementById("table-content").style.height = window.innerHeight - 140 + 'px';
-    window.onresize = function(){
-        document.getElementById("table-content").style.height = window.innerHeight - 140 + 'px';
-    }
+    // document.getElementById("table-content").style.height = window.innerHeight - 140 + 'px';
+    // window.onresize = function(){
+    //     document.getElementById("table-content").style.height = window.innerHeight - 140 + 'px';
+    // }
+
 });
