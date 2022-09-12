@@ -15,21 +15,24 @@
                 "02":{
                     "1":{
                         "title":"hello world",
-                        "image":"../img/2.jpg"
+                        "image":"../img/2.jpg",
+                        "author":"YumeHinata"
                     },
                     "2":{
                         "title":"first paper",
-                        "image":""
+                        "image":"",
+                        "author":"YumeHinata"
                     }
                 }
             }
         },
         "2023":{
             "07":{
-                "2":{
+                "02":{
                     "1":{
                         "title":"first pafsgsper",
-                        "image":""
+                        "image":"",
+                        "author":"YumeHinata"
                     }
                 },
                 "13":{

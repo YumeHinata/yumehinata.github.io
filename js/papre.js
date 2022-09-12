@@ -21,7 +21,7 @@ useJson("/page/config/config.json",function(){
         navMenu.innerHTML += '<li><a href="'+navUrl+'">'+navName+'</a></li>';
     }
 });
-// 加载标题和头图
+// 加载标题、头图、作者头像
 useJson("/paper/index.json",function(){
     var search = json.search;
     var sHref = window.location.search;
@@ -53,7 +53,7 @@ useJson("/paper/index.json",function(){
                         if(num[x]=="-"){
                             Day=e;
                             num = num.replace(Day,"")
-                            paper=num;
+                            Paper=num;
                             Day = Day.replace(/-/g,'');
                             Month = Month.replace(/-/g,'');
                             Year = Year.replace(/-/g,'');
@@ -63,16 +63,30 @@ useJson("/paper/index.json",function(){
             }
         }
     }
-    search=search[Year][Month][Day][paper];
+    search=search[Year][Month][Day][Paper];
     document.title=search.title;
     document.getElementsByClassName("pattern-title")[0].innerHTML=search.title;
     document.getElementsByClassName("pattern-attachment")[0].style.backgroundImage = "url(" + search.image +")";
+    // 通过作者名加载头像
+    useJson("https://api.github.com/users/"+search.author,function(){
+        var avatar = json.avatar_url;
+        document.getElementsByClassName("pattern-avatar")[0].style.backgroundImage="url("+avatar+")";
+    });
 });
 }
 // 加载md
+var sNumber = window.location.search
+if(sNumber.search("&")==-1){
+    var sNumber = sNumber.match(/(number=(\S*))/)[2];
+}else{
+    var sNumber = sNumber.match(/(number=(\S*)&)/)[2];
+}
+sNumber = sNumber.replace(/-/g,"/");
+var sHref = window.location.origin + "/paper/" + sNumber + ".md";
+// console.log(sHref);
 $(function(){
     var primaryContent;
-    $.get("test.md",function(markdown){
+    $.get(sHref,function(markdown){
         primaryContent = editormd.markdownToHTML("content",{
             markdown        : markdown ,//+ "\r\n" + $("#append-test").text(),
             //htmlDecode      : true,       // 开启 HTML 标签解析，为了安全性，默认不开启
