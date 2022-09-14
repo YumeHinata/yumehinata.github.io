@@ -1,22 +1,83 @@
+import { Octokit, App } from "https://cdn.skypack.dev/octokit";
 window.onload = function(){
 //引入json文件的函数
 function useJson(url,fun){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function()  {
         if (this.readyState == 4 && this.status == 200) {
-            json =  JSON.parse(this.responseText);
+            window.json =  JSON.parse(this.responseText);
             fun();
         }
     };
-    xmlhttp.open("GET", url , true);
+    xmlhttp.open("GET", url , false);
     xmlhttp.send();
 }
+// 读取cookie中token的函数
+function readToken(){
+    let token="";
+    let s = document.cookie;
+    for(let i=0;i<s.length;i++){
+      token += s[i];
+      if(token=="token="){
+        token='';
+      }
+    }
+    return token;
+}
+// 创建或更新文件内容的函数
+function octokitPush(tk,pt,sa,ct){
+    var octokit = new Octokit({
+        auth: tk
+    });
+    useJson("./config/config.json",function(){
+        let name = window.json.userName;
+        octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+            owner: name,
+            repo: json.userName + '.github.io',
+            path: pt,
+            message: 'a new commit message',
+            committer: {
+                name: json.userName,
+                email: ''
+            },
+            content: ct,
+            sha: sa
+        })
+    });
+}
+// 读取文件信息的函数
+function octokitGet(tk,pt){
+    // var oGet;
+    const octokit = new Octokit({
+        auth: tk
+    });
+    useJson("./config/config.json",function(){
+        window.out = octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+            owner: json.userName,
+            repo: json.userName+".github.io",
+            path: pt
+        });
+    });
+    return window.out
+}
+// 改变markdown大小
+let main = document.getElementById("main");
+main.style.width = window.innerWidth - 200 + "px";
+main.style.height = window.innerHeight + "px";
+window.onresize = function(){
+    let main = document.getElementById("main");
+    let writing = document.getElementById("writing");
+    main.style.width = window.innerWidth - 200 + "px";
+    main.style.height = window.innerHeight + "px";
+    writing.style.height = window.innerHeight + "px";
+}
+// 新建博客
 var testEditor;
 var xNewMd = "./config/new.md";
 $(function() {          
     $.get(xNewMd, function(md){
-        testEditor = editormd("main", {
-            width: "90%",
+        testEditor = editormd("writing", {
+            // width: "90%",
             height: 740,
             path : '../editormd/lib/',
             theme : "dark",
@@ -58,4 +119,16 @@ $(function() {
         });
     });
 });
+// 提交功能的实现
+let commit = document.getElementById("commit");
+commit.onclick = function(){
+    let nweContent = document.getElementsByClassName("editormd-markdown-textarea")[0].innerHTML;
+    var gToken = readToken();
+    var d = new Date();
+    let newPath = "paper/" + d.getFullYear() + "/" + d.getMonth() + "/" + d.getDate() + "/" + "1.md";
+    // octokitPush(gToken,newPath,"","1111111");
+    let qq = octokitGet(gToken,"paper/index.json");
+    console.log(gToken+',这是一次提交，'+nweContent+","+newPath);
+    console.log(qq);
+}
 }

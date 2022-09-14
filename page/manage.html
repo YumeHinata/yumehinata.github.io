@@ -27,13 +27,25 @@
     <script id="-lib-sequence-diagram-min" type="text/javascript" src="../editormd/lib/sequence-diagram.min.js"></script>
     <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
     <script id="-cdnjs-cloudflare-com-ajax-libs-KaTeX-0-3-0-katex-min" type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js"></script>
-    <script type="module" >
-        import { Octokit, App } from "https://cdn.skypack.dev/octokit";
-    </script>
 
-    <script src="../js/manage.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="../css/manage.css">
+    <script src="../js/manage.js" type="module"></script>
 </head>
 <body>
-    <div id="main"></div>
+    <div id="base">
+        <div id="sidebar">
+            <ul class="content">
+                <li><a href="javascript:;" class="home">首页</a></li>
+            </ul>
+        </div>
+        <div id="main">
+            <div id="writing"></div>
+            <div id="push">
+                <h4>标题</h4>
+                <input id="newTitile">
+                <div id="commit">提交</div>
+            </div>
+        </div>    
+    </div>
 </body>
 </html>

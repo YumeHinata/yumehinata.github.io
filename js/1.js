@@ -1,35 +1,30 @@
 // window.onload = function(){
-    var app = new Vue({
-        el: '#app',
-        data: {
-          message: 'Hello Vue!'
-        }
-    })
+
     // Octokit.js
     // https://github.com/octokit/core.js#readme
     // 
 // }
 
-
-// var btn = document.getElementById("bt");
-//     btn.onclick = function(){
-//         console.log("hhhhh")
-//         const octokit = new Octokit({
-//             auth: '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'
-//         })
-//         octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-//             owner: 'yumehinata',
-//             repo: 'yumehinata.github.io',
-//                 path: 'paper/index4.json',
-//                 message: 'a new commit message',
-//                 committer: {
-//                     name: 'Yume',
-//                     email: '3099729829@qq.com'
-//                 },
-//             content: 'bXkgdXBkYXRlZCBmaWxlIGNvbnRlbnRz',
-//             sha: '95b966ae1c166bd92f8ae7d1c313e738c731dfc3'
-//         })
-// }
+import { Octokit, App } from "https://cdn.skypack.dev/octokit";
+var btn = document.getElementById("push");
+    btn.onclick = function(){
+        console.log("hhhhh")
+        const octokit = new Octokit({
+            auth: 'ghp_7QGfw40lejz915Rf1cBhW6R9HqL3nbloj'
+        })
+        octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+            owner: 'yumehinata',
+            repo: 'yumehinata.github.io',
+                path: 'paper/index4.json',
+                message: 'a new commit message',
+                committer: {
+                    name: 'Yume',
+                    email: '3099729829@qq.com'
+                },
+            content: 'bXkgdXBkYXRlZCBmaWxlIGNvbnRlbnRz',
+            sha: '95b966ae1c166bd92f8ae7d1c313e738c731dfc3'
+        })
+}
 // 读取json文件
 // import indexJson from '../paper/index.json';
 // var xmlhttp = new XMLHttpRequest();
