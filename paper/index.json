@@ -1,13 +1,6 @@
 {      
     "index":[
-        {"year":"2022","month":"09","day":"02","paper":1,"title":"hello world","image":"./img/2.jpg"},
-        {"year":"2022","month":"09","day":"02","paper":2,"title":"first paper","image":""},
-        {"year":"2023","month":"07","day":"02","paper":1,"title":"first pafsgsper","image":""},
-        {"year":2023,"month":"07","day":"13","paper":1,"title":"first papehfr","image":""},
-        {"year":2023,"month":"08","day":"02","paper":1,"title":"firsg,gkt paper","image":""},
-        {"year":2024,"month":"09","day":"03","paper":1,"title":"firsthklh paper","image":""},
-        {"year":2024,"month":"09","day":"06","paper":1,"title":"first pgkghkaper","image":""},
-        {"year":2025,"month":"03","day":"07","paper":1,"title":"first 'kjjpaper","image":""}
+        {"year":"2022","month":"09","day":"02","paper":1,"title":"hello world","image":"./img/2.jpg"}
     ],
     "search":{
         "2022":{
@@ -17,36 +10,6 @@
                         "title":"hello world",
                         "image":"../img/2.jpg",
                         "author":"YumeHinata"
-                    },
-                    "2":{
-                        "title":"first paper",
-                        "image":"",
-                        "author":"YumeHinata"
-                    }
-                }
-            }
-        },
-        "2023":{
-            "07":{
-                "02":{
-                    "1":{
-                        "title":"first pafsgsper",
-                        "image":"",
-                        "author":"YumeHinata"
-                    }
-                },
-                "13":{
-                    "1":{
-                        "title":"first papehfr",
-                        "image":""   
-                    }
-                }
-            },
-            "08":{
-                "02":{
-                    "1":{
-                        "title":"firsg,gkt paper",
-                        "image":""   
                     }
                 }
             }

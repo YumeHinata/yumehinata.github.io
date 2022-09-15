@@ -5,12 +5,14 @@ function useJson(url,fun){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function()  {
         if (this.readyState == 4 && this.status == 200) {
-            window.json =  JSON.parse(this.responseText);
+            window.json = JSON.parse(this.responseText);
             fun();
+            return window.json
         }
     };
     xmlhttp.open("GET", url , false);
     xmlhttp.send();
+    return window.json
 }
 // 读取cookie中token的函数
 function readToken(){
@@ -25,7 +27,7 @@ function readToken(){
     return token;
 }
 // 创建或更新文件内容的函数
-function octokitPush(tk,pt,sa,ct){
+function octokitPush(tk,pt,em,sa,ct){
     var octokit = new Octokit({
         auth: tk
     });
@@ -38,7 +40,7 @@ function octokitPush(tk,pt,sa,ct){
             message: 'a new commit message',
             committer: {
                 name: json.userName,
-                email: ''
+                email: em
             },
             content: ct,
             sha: sa
@@ -46,7 +48,7 @@ function octokitPush(tk,pt,sa,ct){
     });
 }
 // 读取文件信息的函数
-function octokitGet(tk,pt){
+async function octokitGet(tk,pt){
     // var oGet;
     const octokit = new Octokit({
         auth: tk
@@ -58,8 +60,18 @@ function octokitGet(tk,pt){
             path: pt
         });
     });
-    return window.out
+    function res(){
+        return window.out.then((rs)=>{return rs})
+    }
+    let result = await res();
+    return result.data;
 }
+// 字符串转base64的函数
+function turnBase64(str) {
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+      return String.fromCharCode('0x' + p1);
+    }));
+  }
 // 改变markdown大小
 let main = document.getElementById("main");
 main.style.width = window.innerWidth - 200 + "px";
@@ -121,14 +133,60 @@ $(function() {
 });
 // 提交功能的实现
 let commit = document.getElementById("commit");
-commit.onclick = function(){
+commit.onclick = async function(){
     let nweContent = document.getElementsByClassName("editormd-markdown-textarea")[0].innerHTML;
+    let pushContent = turnBase64(nweContent);
+    // console.log(qq);
+    // console.log(String.fromCharCode(ascii));
     var gToken = readToken();
     var d = new Date();
-    let newPath = "paper/" + d.getFullYear() + "/" + d.getMonth() + "/" + d.getDate() + "/" + "1.md";
-    // octokitPush(gToken,newPath,"","1111111");
-    let qq = octokitGet(gToken,"paper/index.json");
-    console.log(gToken+',这是一次提交，'+nweContent+","+newPath);
-    console.log(qq);
+    if((""+d.getMonth()).length<2){
+        Month = d.getMonth()+1;
+        var Month = "" + "0"+Month;
+    }else{
+        var Month = d.getMonth()+1;
+        console.log(1)
+    }
+    
+    if(""+(d.getDate()).length<2){
+        var Day = "" + "0"+d.getDate();
+    }else{
+        var Day = d.getDate();
+    }
+    let newDate = d.getFullYear() + "/" + Month + "/" + Day;
+    console.log(newDate);
+    // 判断第几篇文章
+    let indexJson = await useJson("../paper/index.json",function(){});
+    console.log(indexJson)
+    try{
+        typeof indexJson.search[d.getFullYear()]!=undefined;
+        typeof indexJson.search[d.getFullYear()][Month]!=undefined;
+        typeof indexJson.search[d.getFullYear()][Month][Day]!=undefined;
+        var h=1;
+        var i=0;
+        while(i<h){
+            i++;
+            try{
+                typeof indexJson.search[d.getFullYear()][Month][Day][i]!=undefined;
+                h++;
+                console.log("has")
+            }catch(err){
+                // h++;
+                var paperNum = i;
+            }
+        }
+    }catch(err){
+        var paperNum = 1;
+        console.log("not");
+        console.error(err);
+    }
+    // 读取并写入index.json
+    
+    let newPath = "paper/" + newDate + "/" + paperNum + ".md"
+    let octGet = await octokitGet(gToken,"paper/index.json");
+    // let pushContent = encode(nweContent);
+    // octokitPush(gToken,newPath,"3099729829@qq.com","",pushContent);
+    // console.log(gToken+',这是一次提交，'+nweContent+","+newPath);
+    // console.log(newPath);
 }
 }
