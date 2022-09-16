@@ -225,18 +225,26 @@ commit.onclick = async function(){
     }else{
         // 判断上一次提交是否完成
         let newPath = "paper/" + newDate + "/" + paperNum + ".md"
-        let oldOctGet = await octokitGet(gToken,newPath);
-        console.log(oldOctGet);
+        try{
+            // 判断path是否存在，不存在则是一个新的提交，存在则说明上次提交未完成
+            var oldOctGet = await octokitGet(gToken,newPath);
+            let showConsole = document.getElementById("console");
+            showConsole.innerHTML = "上次提交尚未完成，请稍后再试";
+            setTimeout(function(){showConsole.innerHTML = ''},"3000");
+        }catch(err){
+            // console.error(err);
+            // 获取并修改目录
+            let octGet = await octokitGet(gToken,"paper/index.json");
+            // console.log(octGet.sha);
+            // console.log(indexContent);
+            let pushIndexContent = turnBase64(indexContent);
+            octokitPush(gToken,"paper/index.json","3099729829@qq.com",octGet.sha,pushIndexContent);
+            // 写入新的文章
+            let newPath = "paper/" + newDate + "/" + paperNum + ".md"
+            let pushContent = turnBase64(nweContent);
+            octokitPush(gToken,newPath,"3099729829@qq.com","",pushContent);
+        }
     }
-    // 获取并修改目录
-    let octGet = await octokitGet(gToken,"paper/index.json");
-    // console.log(octGet.sha);
-    // console.log(indexContent);
-    let pushIndexContent = turnBase64(indexContent);
-    // octokitPush(gToken,"paper/index.json","3099729829@qq.com",octGet.sha,pushIndexContent);
-    // 写入新的文章
-    let newPath = "paper/" + newDate + "/" + paperNum + ".md"
-    let pushContent = turnBase64(nweContent);
-    // octokitPush(gToken,newPath,"3099729829@qq.com","",pushContent);
+    
 }
 }
