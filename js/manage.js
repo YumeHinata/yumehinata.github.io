@@ -134,8 +134,6 @@ $(function() {
 // 提交功能的实现
 let commit = document.getElementById("commit");
 commit.onclick = async function(){
-    let nweContent = document.getElementsByClassName("editormd-markdown-textarea")[0].innerHTML;
-    let pushContent = turnBase64(nweContent);
     // console.log(qq);
     // console.log(String.fromCharCode(ascii));
     var gToken = readToken();
@@ -159,27 +157,13 @@ commit.onclick = async function(){
     // 判断第几篇文章
     let indexJson = await useJson("../paper/index.json",function(){});
     // console.log(indexJson)
-    try{
-        typeof indexJson.search[d.getFullYear()]!=undefined;
-        typeof indexJson.search[d.getFullYear()][Month]!=undefined;
-        typeof indexJson.search[d.getFullYear()][Month][Day]!=undefined;
-        var h=1;
-        var i=0;
-        while(i<h){
-            i++;
-            try{
-                typeof indexJson.search[d.getFullYear()][Month][Day][i]!=undefined;
-                h++;
-                // console.log("has")
-            }catch(err){
-                // h++;
-                var paperNum = i;
-            }
+    var i=0;
+    while(true){
+        i++;
+        var paperNum=i;
+        if(indexJson.search[Year][Month][Day][paperNum]==undefined){
+            break
         }
-    }catch(err){
-        var paperNum = 1;
-        // console.log("not");
-        console.error(err);
     }
     // 读取并写入index.json
     let NewTitle = document.getElementById("newTitle").value;
@@ -234,14 +218,16 @@ commit.onclick = async function(){
     console.log(indexContent);
     // 获取并修改目录
     let octGet = await octokitGet(gToken,"paper/index.json");
-    // console.log(octGet.sha)
+    console.log(octGet.sha);
+    console.log(indexContent);
     let pushIndexContent = turnBase64(indexContent);
     octokitPush(gToken,"paper/index.json","3099729829@qq.com",octGet.sha,pushIndexContent);
     // 写入新的文章
     let newPath = "paper/" + newDate + "/" + paperNum + ".md"
-
+    let nweContent = document.getElementsByClassName("editormd-markdown-textarea")[0].innerHTML;
+    let pushContent = turnBase64(nweContent);
     // let pushContent = encode(nweContent);
-    // octokitPush(gToken,newPath,"3099729829@qq.com","",pushContent);
+    octokitPush(gToken,newPath,"3099729829@qq.com","",pushContent);
     // console.log(gToken+',这是一次提交，'+nweContent+","+newPath);
     // console.log(newPath);
 }
