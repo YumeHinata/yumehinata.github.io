@@ -215,20 +215,28 @@ commit.onclick = async function(){
         search
     }
     indexContent = JSON.stringify(indexContent);
-    console.log(indexContent);
+    // console.log(indexContent);
+    // 判断标题和正文是否为空，为空则禁止上传
+    let nweContent = document.getElementsByClassName("editormd-markdown-textarea")[0].innerHTML;
+    if((nweContent.length==0)||(NewTitle.length==0)){
+        let showConsole = document.getElementById("console");
+        showConsole.innerHTML = "标题或正文不得为空";
+        setTimeout(function(){showConsole.innerHTML = ''},"3000");
+    }else{
+        // 判断上一次提交是否完成
+        let newPath = "paper/" + newDate + "/" + paperNum + ".md"
+        let oldOctGet = await octokitGet(gToken,newPath);
+        console.log(oldOctGet);
+    }
     // 获取并修改目录
     let octGet = await octokitGet(gToken,"paper/index.json");
-    console.log(octGet.sha);
-    console.log(indexContent);
+    // console.log(octGet.sha);
+    // console.log(indexContent);
     let pushIndexContent = turnBase64(indexContent);
-    octokitPush(gToken,"paper/index.json","3099729829@qq.com",octGet.sha,pushIndexContent);
+    // octokitPush(gToken,"paper/index.json","3099729829@qq.com",octGet.sha,pushIndexContent);
     // 写入新的文章
     let newPath = "paper/" + newDate + "/" + paperNum + ".md"
-    let nweContent = document.getElementsByClassName("editormd-markdown-textarea")[0].innerHTML;
     let pushContent = turnBase64(nweContent);
-    // let pushContent = encode(nweContent);
-    octokitPush(gToken,newPath,"3099729829@qq.com","",pushContent);
-    // console.log(gToken+',这是一次提交，'+nweContent+","+newPath);
-    // console.log(newPath);
+    // octokitPush(gToken,newPath,"3099729829@qq.com","",pushContent);
 }
 }
