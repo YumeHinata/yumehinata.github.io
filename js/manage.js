@@ -140,12 +140,13 @@ commit.onclick = async function(){
     // console.log(String.fromCharCode(ascii));
     var gToken = readToken();
     var d = new Date();
+    var Year = d.getFullYear();
     if((""+d.getMonth()).length<2){
         Month = d.getMonth()+1;
         var Month = "" + "0"+Month;
     }else{
         var Month = d.getMonth()+1;
-        console.log(1)
+        // console.log(1)
     }
     
     if(""+(d.getDate()).length<2){
@@ -153,11 +154,11 @@ commit.onclick = async function(){
     }else{
         var Day = d.getDate();
     }
-    let newDate = d.getFullYear() + "/" + Month + "/" + Day;
-    console.log(newDate);
+    let newDate = Year + "/" + Month + "/" + Day;
+    // console.log(newDate);
     // 判断第几篇文章
     let indexJson = await useJson("../paper/index.json",function(){});
-    console.log(indexJson)
+    // console.log(indexJson)
     try{
         typeof indexJson.search[d.getFullYear()]!=undefined;
         typeof indexJson.search[d.getFullYear()][Month]!=undefined;
@@ -169,7 +170,7 @@ commit.onclick = async function(){
             try{
                 typeof indexJson.search[d.getFullYear()][Month][Day][i]!=undefined;
                 h++;
-                console.log("has")
+                // console.log("has")
             }catch(err){
                 // h++;
                 var paperNum = i;
@@ -177,13 +178,68 @@ commit.onclick = async function(){
         }
     }catch(err){
         var paperNum = 1;
-        console.log("not");
+        // console.log("not");
         console.error(err);
     }
     // 读取并写入index.json
-    
-    let newPath = "paper/" + newDate + "/" + paperNum + ".md"
+    let NewTitle = document.getElementById("newTitle").value;
+    let pushObj = {"year": Year,"month":Month,"day":Day,"paper":paperNum,"title":NewTitle,"image":"./img/2.jpg"};
+    let indexIndex = indexJson.index;
+    indexIndex.push(pushObj);
+    let index = indexIndex;
+    let indexSearch = indexJson.search;
+    if(indexSearch[Year]==undefined){
+        indexSearch[Year] = {
+            [Month]:{
+                [Day]:{
+                    [paperNum]:{
+                        "title":NewTitle,
+                        "image":"../img/2.jpg",
+                        "author":"YumeHinata"
+                    }
+                }
+            }
+        }
+    }else if(indexSearch[Year][Month]==undefined){
+        indexSearch[Year][Month] = {
+            [Day]:{
+                [paperNum]:{
+                    "title":NewTitle,
+                    "image":"../img/2.jpg",
+                    "author":"YumeHinata"
+                }
+            }
+        }
+    }else if(indexSearch[Year][Month][Day]==undefined){
+        indexSearch[Year][Month][Day] = {
+            [paperNum]:{
+                "title":NewTitle,
+                "image":"../img/2.jpg",
+                "author":"YumeHinata"
+            }
+        }
+    }else if(indexSearch[Year][Month][Day][paperNum]==undefined){
+        indexSearch[Year][Month][Day][paperNum] = {
+            "title":NewTitle,
+            "image":"../img/2.jpg",
+            "author":"YumeHinata"
+        }
+    }
+    let search = indexSearch;
+    let indexContent = {
+        index,
+        search
+    }
+    indexContent = JSON.stringify(indexContent);
+    console.log(indexContent);
+    // 获取并修改目录
     let octGet = await octokitGet(gToken,"paper/index.json");
+    // console.log(octGet.sha)
+    let pushIndexContent = turnBase64(indexContent);
+    octokitPush(gToken,"paper/index.json","3099729829@qq.com",octGet.sha,pushIndexContent);
+    // 写入新的文章
+    let newPath = "paper/" + newDate + "/" + paperNum + ".md"
+
     // let pushContent = encode(nweContent);
     // octokitPush(gToken,newPath,"3099729829@qq.com","",pushContent);
     // console.log(gToken+',这是一次提交，'+nweContent+","+newPath);
