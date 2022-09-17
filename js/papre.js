@@ -31,7 +31,7 @@ async function getGitUser(fun){
         }
     }
     xmlhttp.open("GET", "https://api.github.com/users/"+userName, false);
-    xmlhttp.setRequestHeader("Authorization","token "+lowToken);
+    xmlhttp.setRequestHeader("Authorization","token ghp_"+lowToken);
     xmlhttp.send();
 }
 // 完成导航栏
