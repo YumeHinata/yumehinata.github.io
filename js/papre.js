@@ -11,6 +11,29 @@ function useJson(url,fun){
     xmlhttp.open("GET", url , true);
     xmlhttp.send();
 }
+// 获取头像用的函数
+async function getGitUser(fun){
+    var xmlhttp = new XMLHttpRequest();
+    var configJson = xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            configJson = JSON.parse(this.responseText);
+            return configJson
+        }
+    }
+    xmlhttp.open("GET", "../page/config/config.json" , false);
+    xmlhttp.send();
+    userName = configJson.userName;
+    lowToken = configJson.lowToken;
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            gitUser = JSON.parse(this.responseText);
+            fun();
+        }
+    }
+    xmlhttp.open("GET", "https://api.github.com/users/"+userName, false);
+    xmlhttp.setRequestHeader("Authorization","token "+lowToken);
+    xmlhttp.send();
+}
 // 完成导航栏
 useJson("/page/config/config.json",function(){
     navS = json.nav;
@@ -67,9 +90,10 @@ useJson("/paper/index.json",function(){
     document.title=search.title;
     document.getElementsByClassName("pattern-title")[0].innerHTML=search.title;
     document.getElementsByClassName("pattern-attachment")[0].style.backgroundImage = "url(" + search.image +")";
-    // 通过作者名加载头像
-    useJson("https://api.github.com/users/"+search.author,function(){
-        var avatar = json.avatar_url;
+    // 通过config文件中的用户名作为头像
+    var author = search.author;
+    getGitUser(function(){
+        var avatar = gitUser.avatar_url;
         document.getElementsByClassName("pattern-avatar")[0].style.backgroundImage="url("+avatar+")";
     });
 });

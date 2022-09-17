@@ -72,17 +72,6 @@ function turnBase64(str) {
       return String.fromCharCode('0x' + p1);
     }));
   }
-// 改变markdown大小
-let main = document.getElementById("main");
-main.style.width = window.innerWidth - 200 + "px";
-main.style.height = window.innerHeight + "px";
-window.onresize = function(){
-    let main = document.getElementById("main");
-    let writing = document.getElementById("writing");
-    main.style.width = window.innerWidth - 200 + "px";
-    main.style.height = window.innerHeight + "px";
-    writing.style.height = window.innerHeight + "px";
-}
 // 新建博客
 var testEditor;
 var xNewMd = "./config/new.md";
@@ -129,8 +118,21 @@ $(function() {
                 //this.resize("100%", 640);
             }
         });
+        let writing = document.getElementById("writing");
+        writing.style.height = window.innerHeight + "px";
     });
 });
+// 改变markdown大小
+let main = document.getElementById("main");
+main.style.width = window.innerWidth - 200 + "px";
+main.style.height = window.innerHeight + "px";
+window.onresize = function(){
+    let main = document.getElementById("main");
+    let writing = document.getElementById("writing");
+    main.style.width = window.innerWidth - 200 + "px";
+    main.style.height = window.innerHeight + "px";
+    writing.style.height = window.innerHeight + "px";
+}
 // 提交功能的实现
 let commit = document.getElementById("commit");
 commit.onclick = async function(){

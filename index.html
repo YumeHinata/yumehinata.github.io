@@ -8,7 +8,7 @@
     <script src="./js/vue.js" type="text/javascript" charset="utf-8"></script>
     <!-- <script src="./paper/index.json" type="text/javascript" charset="utf-8"></script> -->
     <!-- <script src="https://cdn.skypack.dev/-/@octokit/core@v4.0.5-DCTGyLHthf6deTvrXINL/dist=es2019,mode=raw/optimized/@octokit/core.js" type="text/javascript" charset="utf-8"></script> -->
-    
+    <link rel="stylesheet" href="./css/fa/css/all.min.css">
     <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="./css/reset.css">
     <script src="./js/index.js" type="text/javascript" charset="utf-8"></script>
@@ -22,6 +22,17 @@
         </nav>
     </header>
     <div id="showcase">
+        <div class="down">
+            <i class="fa fa-chevron-down"></i>
+        </div>
+        <div class="glass">
+            <div class="showcase-container">
+                <h1 id="welcome" data-text=""></h1>
+                <div id="info-container">
+
+                </div>
+            </div>
+        </div>
     </div>
     <!-- <div id="app">{{ message }}</div> -->
 
@@ -40,11 +51,13 @@
                 <H4>归档</H4>
             </div>
         </div>
-        <div id="main">
+        <div id="main-container">
             <h4>推荐</h4>
-            <!-- <div id="test"></div> -->
+            <div id="main">
+                <!-- <div id="test"></div> -->
+            </div>
+            <!-- 需要每一篇一个div，其中包含头图、标题、摘要、发布时间、分类 -->
         </div>
-        <!-- 需要每一篇一个div，其中包含头图、标题、摘要、发布时间、分类 -->
     </div>
 </body>
 <!-- <foot>

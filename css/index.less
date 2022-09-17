@@ -1,17 +1,33 @@
 #navigate {
     display: flex;
     justify-content: center;
-    background-color: #fff;
+    background-color: transparent;
     height: 75px;
     width: 100%;
     position: fixed;
-    box-shadow: 0 0 25px rgb(137, 137, 137);
     z-index: 9999;
+    transition: box-shadow 0.5s , background-color 0.5s;
+    transition-timing-function: ease-out;
+}
+#navigate:hover{
+    background-color: #fff;
+    box-shadow: 0 0 25px rgb(137, 137, 137);
+    #nav-container #nav-menu a {
+        color: rgb(142, 142, 142);
+    }
+    #nav-container {
+        left: 0;
+    }
+    
 }
 #nav-container {
     // background-color: aliceblue;
     // width: 600px;
+    position: relative;
+    left: 50px;
     height: 100%;
+    transition: left 0.5s;
+    transition-timing-function: ease-out;
 }
 #nav-menu {
     display: flex;
@@ -21,14 +37,62 @@
     li {
         padding-left: 8px;
         padding-right: 8px;
+        position: relative;
     }
     a {
         display: block;
         // vertical-align: middle;
         line-height: 75px;
         text-decoration: none;
-        color: rgb(142, 142, 142);
         font-size: 18px;
+        color: transparent;
+        transition: color 0.5s;
+    }
+    li::before{
+        display: block;
+        content: attr(data-text);
+        position: absolute;
+        color: rgb(255, 152, 57);
+        height: 75px;
+        font-size: 18px;
+        line-height: 75px;
+        width: 0;
+        overflow: hidden;
+        transition: width 0.2s;
+        transition-timing-function: ease-out;
+    }
+    li:hover:before{
+        width: 100%;
+        overflow: hidden;
+    }
+    li::after{
+        display: block;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        content: "";
+        width: 0px;
+        height: 5px;
+        background-color:rgb(255, 152, 57);
+        transition: width 0.2s;
+        transition-timing-function: ease-out;
+    }
+    li:hover:after{
+        width: 100%;
+    }
+}
+@keyframes down {
+    from{
+        bottom: 40px;
+        // transform: translateX(-50%);
+    }
+    50%{
+        bottom: 30px;
+        
+    }
+    to{
+        bottom: 40px;
+        // transform: translateX(-50%);
     }
 }
 #showcase {
@@ -41,6 +105,116 @@
     background-position: center;
     background-attachment: fixed;
     background-size: cover;
+    .down{
+        position: absolute;
+        left: 20px;
+        color: #fff;
+        font-size: 40px;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation-name: down;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-out;
+    }
+    .glass {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: url(../img/dot.gif);
+        background-attachment: fixed;
+        .showcase-container {
+            display: flex;
+            // width: 200px;
+            // height: 150px;
+            // background-color: aqua;
+            align-items: center;
+            flex-direction: column;
+            #welcome {
+                font-size: 80px;
+                font-weight: bold;
+                color: #fff;
+                position: relative;
+            }
+        }
+    }
+}
+@keyframes welcomeA {
+    from{
+        height: 80px;
+    }
+    16%{
+        height: 10px;
+    }
+    33%{
+        height: 0px;
+    }
+    49%{
+        height: 40px;
+    }
+    66%{
+        height: 10px;
+    }
+    82%{
+        height: 0px;
+    }
+    to{
+        height: 80px;
+    }
+}
+@keyframes welcomeB {
+    from{
+        height: 0px;
+    }
+    16%{
+        height: 80px;
+    }
+    33%{
+        height: 70px;
+    }
+    49%{
+        height: 0px;
+    }
+    66%{
+        height: 60px;
+    }
+    82%{
+        height: 70px;
+    }
+    to{
+        height: 0px;
+    }
+}
+#welcome:hover:before{
+    position: absolute;
+    content: attr(data-text);
+    text-shadow: 5px 0 rgb(255, 93, 93);
+    left: 0;
+    top: 2px;
+    overflow-y: hidden;
+    overflow-x: visible;
+    animation-name: welcomeB;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in;
+    // bottom: 0;
+}
+#welcome:hover:after {
+    position: absolute;
+    content: attr(data-text);
+    text-shadow: -5px 0 rgb(49, 245, 255);
+    left: 0;
+    top: 1px;
+    // height: 20px;
+    overflow-y: hidden;
+    overflow-x: visible;
+    animation-name: welcomeA;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in;
 }
 #primary {
     display: flex;
@@ -139,7 +313,7 @@
         padding-left: 10px;
     }
 }
-#main {
+#main-container {
     width: 100%;
     height: 100%;
     padding: 60px;
@@ -147,6 +321,11 @@
     align-items: center;
     flex-direction: column;
     // padding-right: 160px;
+    #main{
+        display: flex;
+        align-items: center;
+        flex-direction: column-reverse;   
+    }
     h4{
         margin-bottom: 40px;
         font-size: 20px;
@@ -165,6 +344,12 @@
         border-radius: 15px;
         box-shadow: 0 0 8px rgb(221, 221, 221);
         margin-top: 20px;
+        transition: box-shadow 0.2s,transform 0.2s;
+        transition-timing-function: ease-out;
+    }
+    .post:hover{
+        box-shadow: 0 0 16px rgb(112, 112, 112);
+        transform: translateY(-5px);
     }
     .post-thumb {
         width: 485px;

@@ -1,4 +1,4 @@
-window.onload = function(){
+window.onload = async function(){
 //引入json文件的函数
 function useJson(url,fun){
     var xmlhttp = new XMLHttpRequest();
@@ -22,6 +22,37 @@ function readToken(){
       }
     }
     return token;
+}
+// 获取头像用的函数
+async function getGitUser(fun){
+    var xmlhttp = new XMLHttpRequest();
+    var configJson = xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            configJson = JSON.parse(this.responseText);
+            return configJson
+        }
+    }
+    xmlhttp.open("GET", "./page/config/config.json" , false);
+    // xmlhttp.setRequestHeader("Authorization",lowToken);
+    xmlhttp.send();
+    // await useJson("./page/config/config.json",function(){
+    userName = configJson.userName;
+    lowToken = configJson.lowToken;
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            gitUser = JSON.parse(this.responseText);
+            fun();
+            
+        }
+    }
+    xmlhttp.open("GET", "https://api.github.com/users/"+userName, false);
+    xmlhttp.setRequestHeader("Authorization","token "+lowToken);
+    xmlhttp.send();
+    // window.gitUser = await window.gitUser;
+    // return await gitUser
+    // });
+    // fun();
+    // return gitUser
 }
 // 橱窗大小随着窗口变化
 window.onresize = function(){
@@ -110,18 +141,22 @@ useJson("./paper/index.json",function(){
 // 侧边栏功能
 // 引入config.json完成部分页面
 useJson("./page/config/config.json",function(){
-    // 顺便完成网站标题和图标
+    // 顺便完成网站标题和图标、欢迎词
     document.title = json.sideName;
     // 获取头像、昵称、主页
     userName = json.userName
     navS = json.nav
     var navMenu = document.getElementById("nav-menu");
-    useJson("https://api.github.com/users/"+userName,function(){
+    let welcome = document.getElementById("welcome");
+    welcome.innerHTML=json.welcome;
+    welcome.dataset.text=json.welcome;
+    // useJson("https://api.github.com/users/"+userName,function(){
+    let githubUser = getGitUser(function(){
         var sidebarAvatar = document.getElementsByClassName("sidebar-avatar")[0];
         var LoginName = document.getElementsByClassName("login")[0];
         var followGithub = document.getElementsByClassName("follow")[0];
-        avatarUrl = json.avatar_url;
-        login = json.login;
+        avatarUrl = gitUser.avatar_url;
+        login = gitUser.login;
         // console.log(avatarUrl)
         sidebarAvatar.style.backgroundImage = "url("+avatarUrl+")";
         LoginName.innerHTML = login;
@@ -133,7 +168,7 @@ useJson("./page/config/config.json",function(){
     for(a=0;a < navS.length;a++){
         navName=navS[a].name;
         navUrl=navS[a].url;
-        navMenu.innerHTML += '<li><a href="'+navUrl+'">'+navName+'</a></li>';
+        navMenu.innerHTML += '<li'+' data-text='+navName+'><a href="'+navUrl+'">'+navName+'</a></li>';
     }
 });
 // 利用cookie存储token
@@ -155,5 +190,36 @@ userToken.onfocus = function(){
     if(document.cookie != null && document.cookie != '' && document.cookie != "token="){
         userToken.value = readToken();
     }
+}
+// 导航栏显示
+var body = document.body;
+body.onscroll = function(event){
+    if(document.documentElement.scrollTop!=0){
+        document.getElementById("navigate").style.backgroundColor = "#fff";
+        document.getElementById("navigate").style.boxShadow= '0 0 25px rgb(137, 137, 137)';
+        for(i=0;i<document.getElementById("nav-menu").getElementsByTagName("a").length;i++){
+            document.getElementById("nav-menu").getElementsByTagName("a")[i].style.color="rgb(142, 142, 142)";
+        }
+        document.getElementById("nav-container").style.left=0;
+    }else{
+        document.getElementById("navigate").style="";
+        for(i=0;i<document.getElementById("nav-menu").getElementsByTagName("a").length;i++){
+            document.getElementById("nav-menu").getElementsByTagName("a")[i].style="";
+        }
+        document.getElementById("nav-container").style = "";
+    }
+}
+// 点击下降到发现页
+var downBtn = document.getElementsByClassName("down")[0];
+downBtn.onclick = function(){
+    var pos = document.documentElement.scrollTop + 1;
+    var id = setInterval(function(){
+        if(pos>=window.innerHeight-75){
+            clearInterval(id);
+        }else{
+            pos*=1.05;
+            document.documentElement.scrollTop=pos;
+        }
+    },1);
 }
 }
