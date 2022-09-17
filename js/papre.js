@@ -43,6 +43,18 @@ useJson("/page/config/config.json",function(){
         navUrl=navS[a].url;
         navMenu.innerHTML += '<li data-text="'+navName+'"><a href="'+navUrl+'">'+navName+'</a></li>';
     }
+    var navli = document.getElementsByTagName("li");
+    for(i=0;i<navli.length;i++){
+        navli[i].onclick = function(){
+            // var v = "";
+            // openPaperUrl = this.className.match(/[0-9]|-/ig);
+            // navName=navS[i].name;
+            nUrl = this.getElementsByTagName("a")[0].href;
+            // console.log(nUrl);
+            // console.log(a);
+            window.open(nUrl);
+        }
+    }
 });
 // 加载标题、头图、作者头像
 useJson("/paper/index.json",function(){

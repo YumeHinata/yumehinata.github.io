@@ -61,12 +61,16 @@ window.onresize = function(){
     showcase.style.height = showcaseHeight+"px";
     let sidebar = document.getElementById("sidebar");
     sidebar.style.height = showcaseHeight-75+"px"
+    let archive = document.getElementById("archive");
+    let account = document.getElementById("account");
+    archive.style.height = sidebar.offsetHeight-account.offsetHeight+"px";
 }
 var showcaseHeight = window.innerHeight;
 let showcase = document.getElementById("showcase");
 showcase.style.height = showcaseHeight+"px";
 let sidebar = document.getElementById("sidebar");
 sidebar.style.height = showcaseHeight-75+"px"
+// document.documentElement.clientWidth=window.innerWidth;
 // 获取归档json，以生成归档
 useJson("./paper/index.json",function(){
     indexYear=[0];
@@ -148,8 +152,8 @@ useJson("./page/config/config.json",function(){
     // 顺便完成网站标题和图标、欢迎词
     document.title = json.sideName;
     // 获取头像、昵称、主页
-    userName = json.userName
-    navS = json.nav
+    var userName = json.userName
+    var navS = json.nav
     var navMenu = document.getElementById("nav-menu");
     let welcome = document.getElementById("welcome");
     welcome.innerHTML=json.welcome;
@@ -170,10 +174,23 @@ useJson("./page/config/config.json",function(){
     });
     // 导航栏可根据cfg.json文件修改
     for(a=0;a < navS.length;a++){
-        navName=navS[a].name;
-        navUrl=navS[a].url;
+        var navName=navS[a].name;
+        var navUrl=navS[a].url;
         navMenu.innerHTML += '<li'+' data-text='+navName+'><a href="'+navUrl+'">'+navName+'</a></li>';
     }
+    var navli = document.getElementsByTagName("li");
+    for(i=0;i<navli.length;i++){
+        navli[i].onclick = function(){
+            // var v = "";
+            // openPaperUrl = this.className.match(/[0-9]|-/ig);
+            // navName=navS[i].name;
+            nUrl = this.getElementsByTagName("a")[0].href;
+            // console.log(nUrl);
+            // console.log(a);
+            window.open(nUrl);
+        }
+    }
+        
 });
 // 利用cookie存储token
 var userToken = document.getElementsByClassName("token")[0];
