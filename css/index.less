@@ -240,14 +240,35 @@
     padding-bottom: 30px;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    .enter{
+        position: absolute;
+        top: 200px;
+        font-size: 20px;
+        color: rgb(142, 142, 142);
+        transition: color 0.2s;
+    }
     .sidebar-avatar{
         width: 160px;
         height: 160px;
-        // background-color: #000;
+        background-color: #fff;
         border-radius: 50%;
         border: 5px rgb(221, 221, 221) solid;
         box-shadow: 0px 0px 6px rgb(221, 221, 221);
         background-size: cover;
+        z-index: 99;
+        transition: transform 0.2s,box-shadow 0.2s;
+    }
+    .sidebar-avatar:hover{
+        transform: translateY(-30px);
+        box-shadow: 0px 0px 18px rgb(180, 180, 180);
+    }
+    .enter:hover + .sidebar-avatar{
+        transform: translateY(-30px);
+        box-shadow: 0px 0px 18px rgb(180, 180, 180);
+    }
+    .enter:hover{
+        color: rgb(255, 152, 57);
     }
     .token {
         margin: 15px;
@@ -258,6 +279,15 @@
         text-align: center;
         border-radius: 10px;
         border: none;
+        outline: transparent;
+        transition: outline 0.2s;
+        color: rgb(145, 145, 145);
+    }
+    .token:hover{
+        outline: 2px rgb(221, 221, 221) solid;
+    }
+    .token:active,{
+        outline: 2px rgb(255, 152, 57) solid;
     }
     .follow{
         margin-top: 20px;
@@ -270,6 +300,11 @@
         border: 3px rgb(221, 221, 221) solid;
         border-radius: 15px;
         box-shadow: 0 0 3px rgb(221, 221, 221);
+        transition: color 0.2s,border 0.2s;
+    }
+    .follow:hover{
+        color: rgb(255, 152, 57);
+        border: 3px rgb(255, 152, 57) solid;
     }
     .login {
         height: 25px;

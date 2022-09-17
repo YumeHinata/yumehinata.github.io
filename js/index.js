@@ -161,7 +161,7 @@ useJson("./page/config/config.json",function(){
         sidebarAvatar.style.backgroundImage = "url("+avatarUrl+")";
         LoginName.innerHTML = login;
         followGithub.onclick = function(){
-            window.open(json.html_url);
+            window.open(gitUser.html_url);
         }
     });
     // 导航栏可根据cfg.json文件修改
@@ -221,5 +221,10 @@ downBtn.onclick = function(){
             document.documentElement.scrollTop=pos;
         }
     },1);
+}
+// 进入管理页
+let manage = document.getElementsByClassName("enter")[0];
+manage.onclick = function(){
+    window.open("./page/manage.html")
 }
 }
