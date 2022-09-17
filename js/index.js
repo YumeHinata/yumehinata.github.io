@@ -57,12 +57,16 @@ async function getGitUser(fun){
 // 橱窗大小随着窗口变化
 window.onresize = function(){
     var showcaseHeight = window.innerHeight;
-    document.getElementById("showcase");
+    let showcase = document.getElementById("showcase");
     showcase.style.height = showcaseHeight+"px";
+    let sidebar = document.getElementById("sidebar");
+    sidebar.style.height = showcaseHeight-75+"px"
 }
 var showcaseHeight = window.innerHeight;
-document.getElementById("showcase");
+let showcase = document.getElementById("showcase");
 showcase.style.height = showcaseHeight+"px";
+let sidebar = document.getElementById("sidebar");
+sidebar.style.height = showcaseHeight-75+"px"
 // 获取归档json，以生成归档
 useJson("./paper/index.json",function(){
     indexYear=[0];

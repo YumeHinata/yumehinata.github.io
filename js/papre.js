@@ -41,7 +41,7 @@ useJson("/page/config/config.json",function(){
     for(a=0;a < navS.length;a++){
         navName=navS[a].name;
         navUrl=navS[a].url;
-        navMenu.innerHTML += '<li><a href="'+navUrl+'">'+navName+'</a></li>';
+        navMenu.innerHTML += '<li data-text="'+navName+'"><a href="'+navUrl+'">'+navName+'</a></li>';
     }
 });
 // 加载标题、头图、作者头像

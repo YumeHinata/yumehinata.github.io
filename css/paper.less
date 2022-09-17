@@ -13,6 +13,7 @@
     position: fixed;
     box-shadow: 0 0 25px rgb(137, 137, 137);
     z-index: 9999;
+    
 }
 #nav-container {
     // background-color: aliceblue;
@@ -20,6 +21,7 @@
     height: 100%;
 }
 #nav-menu {
+    // position: relative;
     display: flex;
     // background-color: aqua;
     justify-content: center;
@@ -27,6 +29,8 @@
     li {
         padding-left: 8px;
         padding-right: 8px;
+        position: relative;
+
     }
     a {
         display: block;
@@ -35,6 +39,38 @@
         text-decoration: none;
         color: rgb(142, 142, 142);
         font-size: 18px;
+    }
+    li::before{
+        display: block;
+        content: attr(data-text);
+        position: absolute;
+        color: rgb(255, 152, 57);
+        height: 75px;
+        font-size: 18px;
+        line-height: 75px;
+        width: 0;
+        overflow: hidden;
+        transition: width 0.2s;
+        transition-timing-function: ease-out;
+    }
+    li:hover:before{
+        width: 100%;
+        overflow: hidden;
+    }
+    li::after{
+        display: block;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        content: "";
+        width: 0px;
+        height: 5px;
+        background-color:rgb(255, 152, 57);
+        transition: width 0.2s;
+        transition-timing-function: ease-out;
+    }
+    li:hover:after{
+        width: 100%;
     }
 }
 #pattern {
