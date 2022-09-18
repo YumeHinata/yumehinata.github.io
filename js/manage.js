@@ -157,15 +157,24 @@ commit.onclick = async function(){
     let newDate = Year + "/" + Month + "/" + Day;
     // console.log(newDate);
     // 判断第几篇文章
-    let indexJson = await useJson("../paper/index.json",function(){});
-    // console.log(indexJson)
+    var indexJson = await useJson("../paper/index.json",function(){});
     var i=0;
     while(true){
         i++;
-        var paperNum=i;
-        if(indexJson.search[Year][Month][Day][paperNum]==undefined){
+        var paperNum=""+i;
+        // let x = indexJson.search[Year][Month][Day]
+        // console.log(x[i])
+        try{
+            indexJson.search[Year][Month][Day][paperNum];
+            // console.log("no")
+            // break
+        }catch{
+            // console.log("hhas")
             break
         }
+        // if(indexJson.search[Year][Month][Day][paperNum]==undefined){
+        //     break
+        // }
     }
     // 读取并写入index.json
     let NewTitle = document.getElementById("newTitle").value;
