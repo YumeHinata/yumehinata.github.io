@@ -133,6 +133,19 @@ window.onresize = function(){
     main.style.height = window.innerHeight + "px";
     writing.style.height = window.innerHeight + "px";
 }
+// 封面上传功能
+var coverFile = document.getElementById("coverFile");
+var cover = document.getElementById("cover");
+var reader = new FileReader();
+coverFile.onchange = function(){
+    var coverImgFile = this.files[0];
+    reader.readAsDataURL(coverImgFile);
+    reader.onload = function(){
+    // console.log(this.result);
+    cover.style.backgroundImage = "url(" + this.result + ")";
+}
+}
+
 // 提交功能的实现
 let commit = document.getElementById("commit");
 commit.onclick = async function(){
