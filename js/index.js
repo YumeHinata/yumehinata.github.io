@@ -128,7 +128,7 @@ useJson("./paper/index.json",function(){
         paperDate = index.year + '-' + index.month + '-' + index.day;
         paperUrl = paperDate + "-" + index.paper
         paperTitle = index.title;
-        mainPaper.innerHTML += '<div class="post ' + x + " " + paperUrl + '"><div class="post-thumb"></div><div class="post-content-wrap"><div class="post-content"><div class="post-date">' + paperDate + '</div><div class="post-title">' + paperTitle + '</div><div class="post-mate"></div><div class="float-content"></div></div></div></div>';
+        mainPaper.innerHTML += '<div class="post ' + x + " " + paperUrl + '"><div class="post-thumb"></div><div class="post-content-wrap"><div class="post-content"><div class="post-date">' + paperDate + '</div><div class="post-title">' + paperTitle + '</div><div class="post-mate"></div><div class="float-content"></div></div><div class="beautify"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>';
         thisPaper = document.getElementsByClassName(paperUrl)[0].getElementsByClassName("post-thumb")[0];
         thisPaper.style.backgroundImage = 'url(' + index.image + ')';
     }
