@@ -78,19 +78,17 @@ async function pushImage(pcc){
     let imgSearch = useJson("../img/index.json",function(){}).search;
     // 判断新图片的路径
     let d = new Date;
-    var Y = d.getFullYear();
-    var M = d.getMonth()+1;
-    var D = d.getDate();
-    if(Y.length<2){
-        Y = ""+"0"+Y;
-    }
+    var Y = ""+(d.getFullYear());
+    var M = ""+(d.getMonth()+1);
+    var D = ""+(d.getDate());
+    console.log(M.length)
     if(M.length<2){
         M = ""+"0"+M;
     }
     if(D.length<2){
         D = ""+"0"+D;
     }
-    console.log(Y)
+    // console.log(Y)
 
     // var imgNum;
     let i = 0;
@@ -162,6 +160,7 @@ async function pushImage(pcc){
     // console.log(imgIndexSha.sha);
     // 上传图片
     octokitPush(token,imgPath,"3099729829@qq.com","",pcc);
+    console.log(pcc)
     return imgPath
 }
 // 新建博客
@@ -316,74 +315,6 @@ commit.onclick = async function(){
         //     break
         // }
     }
-    // 获取已经添加到封面内容
-    var pushCoverContent = "";
-    try{
-        let CoverContent = cover.style.backgroundImage;
-        pushCoverContent = CoverContent.match(/(base64,(\S*)\))/)[2];
-        // console.log(CoverContent +"!!!"+pushCoverContent);
-    }catch{
-    }
-    // 判断封面是否存在，是否调用上传封面函数
-    if(pushCoverContent==""){
-        var coverUrl = "";
-    }else{
-        var coverUrl = "../" + await pushImage(pushCoverContent);
-    }
-    // 获取作者
-    let authorC = document.getElementById("author").value;
-    // 读取并写入index.json
-    let NewTitle = document.getElementById("newTitle").value;
-    let pushObj = {"year": Year,"month":Month,"day":Day,"paper":paperNum,"title":NewTitle,"image":coverUrl};
-    let indexIndex = indexJson.index;
-    indexIndex.push(pushObj);
-    let index = indexIndex;
-    let indexSearch = indexJson.search;
-    if(indexSearch[Year]==undefined){
-        indexSearch[Year] = {
-            [Month]:{
-                [Day]:{
-                    [paperNum]:{
-                        "title":NewTitle,
-                        "image":coverUrl,
-                        "author":authorC
-                    }
-                }
-            }
-        }
-    }else if(indexSearch[Year][Month]==undefined){
-        indexSearch[Year][Month] = {
-            [Day]:{
-                [paperNum]:{
-                    "title":NewTitle,
-                    "image":"../img/2.jpg",
-                    "author":"YumeHinata"
-                }
-            }
-        }
-    }else if(indexSearch[Year][Month][Day]==undefined){
-        indexSearch[Year][Month][Day] = {
-            [paperNum]:{
-                "title":NewTitle,
-                "image":"../img/2.jpg",
-                "author":"YumeHinata"
-            }
-        }
-    }else if(indexSearch[Year][Month][Day][paperNum]==undefined){
-        indexSearch[Year][Month][Day][paperNum] = {
-            "title":NewTitle,
-            "image":"../img/2.jpg",
-            "author":"YumeHinata"
-        }
-    }
-    let search = indexSearch;
-    let indexContent = {
-        index,
-        search
-    }
-    indexContent = JSON.stringify(indexContent);
-    // console.log()
-    // console.log(indexContent);
     // 判断标题和正文是否为空，为空则禁止上传
     let nweContent = document.getElementsByClassName("editormd-markdown-textarea")[0].innerHTML;
     if((nweContent.length==0)||(NewTitle.length==0)){
@@ -400,6 +331,75 @@ commit.onclick = async function(){
             showConsole.innerHTML = "上次提交尚未完成，请稍后再试";
             setTimeout(function(){showConsole.innerHTML = ''},"3000");
         }catch(err){
+            // 获取已经添加到封面内容
+            var pushCoverContent = "";
+            try{
+                let CoverContent = cover.style.backgroundImage;
+                pushCoverContent = CoverContent.match(/(base64,(\S*)"\))/)[2];
+                // console.log(CoverContent +"!!!"+pushCoverContent);
+            }catch{
+            }
+            // 判断封面是否存在，是否调用上传封面函数
+            if(pushCoverContent==""){
+                var coverUrl = "";
+            }else{
+                var coverUrl = "../" + await pushImage(pushCoverContent);
+            }
+            // 获取作者
+            let authorC = document.getElementById("author").value;
+            // 读取并写入index.json
+            let NewTitle = document.getElementById("newTitle").value;
+            let pushObj = {"year": Year,"month":Month,"day":Day,"paper":paperNum,"title":NewTitle,"image":coverUrl};
+            let indexIndex = indexJson.index;
+            indexIndex.push(pushObj);
+            let index = indexIndex;
+            let indexSearch = indexJson.search;
+            if(indexSearch[Year]==undefined){
+                indexSearch[Year] = {
+                    [Month]:{
+                        [Day]:{
+                            [paperNum]:{
+                                "title":NewTitle,
+                                "image":coverUrl,
+                                "author":authorC
+                            }
+                        }
+                    }
+                }
+            }else if(indexSearch[Year][Month]==undefined){
+                indexSearch[Year][Month] = {
+                    [Day]:{
+                        [paperNum]:{
+                            "title":NewTitle,
+                            "image":"../img/2.jpg",
+                            "author":"YumeHinata"
+                        }
+                    }
+                }
+            }else if(indexSearch[Year][Month][Day]==undefined){
+                indexSearch[Year][Month][Day] = {
+                    [paperNum]:{
+                        "title":NewTitle,
+                        "image":"../img/2.jpg",
+                        "author":"YumeHinata"
+                    }
+                }
+            }else if(indexSearch[Year][Month][Day][paperNum]==undefined){
+                indexSearch[Year][Month][Day][paperNum] = {
+                    "title":NewTitle,
+                    "image":"../img/2.jpg",
+                    "author":"YumeHinata"
+                }
+            }
+            let search = indexSearch;
+            let indexContent = {
+                index,
+                search
+            }
+            indexContent = JSON.stringify(indexContent);
+            // console.log()
+            // console.log(indexContent);
+
             // console.error(err);
             // 获取并修改目录
             let octGet = await octokitGet(gToken,"paper/index.json");
