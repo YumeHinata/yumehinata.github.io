@@ -300,20 +300,22 @@ window.onload = function () {
             // console.log(newDate);
             // 判断第几篇文章
             var indexJson = await useJson("../paper/index.json", function () { });
-            var i = 0;
+            var i = 1;
             while (1) {
-                i++;
+                // i++;
                 var paperNum = "" + i;
-                // let x = indexJson.search[Year][Month][Day]
+                // let x = indexJson.search[Year][Month][Day][paperNum]
                 // console.log(x[i])
                 try {
                     let x = indexJson.search[Year][Month][Day][paperNum];
-                    if (((typeof x) == undefined) && ((typeof x) == "undefined")) {
+                    if (((typeof x) != undefined) && ((typeof x) != "undefined")) {
+                        // break
+                        i++
+                    }else{
                         break
-                    } else {
                     }
                     // console.log(x);
-                    break
+                    // break
                 } catch {
                     // console.log(i)
                     break
@@ -335,16 +337,17 @@ window.onload = function () {
             let newPath = "paper/" + newDate + "/" + paperNum + ".md"
             try {
                 // 判断path是否存在，不存在则是一个新的提交，存在则说明上次提交未完成
+                // console.log(newPath);
                 var oldOctGet = await octokitGet(gToken, newPath);
                 let showConsole = document.getElementById("console");
                 showConsole.innerHTML = "上次提交尚未完成，请稍后再试";
                 setTimeout(function () { showConsole.innerHTML = '' }, "3000");
-            } catch (err) {
+            } catch {
                 // 判断封面是否存在，标题和内容是否存在，上一次提交是否完成，决定是否调用上传封面函数
                 if (pushCoverContent == "") {
                     var coverUrl = "";
                 } else {
-                    var coverUrl = "../" + await pushImage(pushCoverContent);
+                    // var coverUrl = "../" + await pushImage(pushCoverContent);
                 }
                 // 获取作者
                 let authorC = document.getElementById("author").value;
@@ -408,11 +411,11 @@ window.onload = function () {
                 // console.log(octGet.sha);
                 // console.log(indexContent);
                 let pushIndexContent = turnBase64(indexContent);
-                octokitPush(gToken, "paper/index.json", "3099729829@qq.com", octGet.sha, pushIndexContent);
+                // octokitPush(gToken, "paper/index.json", "3099729829@qq.com", octGet.sha, pushIndexContent);
                 // 写入新的文章
                 let newPath = "paper/" + newDate + "/" + paperNum + ".md"
                 let pushContent = turnBase64(nweContent);
-                octokitPush(gToken, newPath, "3099729829@qq.com", "", pushContent);
+                // octokitPush(gToken, newPath, "3099729829@qq.com", "", pushContent);
             }
         }
     }
