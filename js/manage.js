@@ -92,22 +92,26 @@ async function pushImage(pcc){
     }
     console.log(Y)
 
-    var imgNum;
+    // var imgNum;
     let i = 0;
     let fileType = document.getElementById("cover").style.backgroundImage.match(/(image\/(\S*);)/)[2];
     if(fileType=="jpeg"){
         fileType = "jpg";
     }
     while(1){
-        i++
+        i++;
+        var imgNum = ""+i;
         try{
-            imgSearch[Y][M][D][i];
+            let x = imgSearch[Y][M][D][i];
+            if(((typeof x)==undefined)&&((typeof x)=="undefined")){
+                break
+            }
         }catch{
-            imgNum = i;
             break
         }
+        console(i);
     }
-    var imgPath = "img/" + "/" + Y + "/" + M + "/" + D + "/" + imgNum + "." + fileType;
+    var imgPath = "img/"  + Y + "/" + M + "/" + D + "/" + imgNum + "." + fileType;
     // 写入indexjson的内容
     if(imgSearch[Y]==undefined){
         imgSearch[Y] = {
@@ -291,17 +295,21 @@ commit.onclick = async function(){
     // 判断第几篇文章
     var indexJson = await useJson("../paper/index.json",function(){});
     var i=0;
-    while(true){
+    while(i<100){
         i++;
         var paperNum=""+i;
         // let x = indexJson.search[Year][Month][Day]
         // console.log(x[i])
         try{
-            indexJson.search[Year][Month][Day][paperNum];
-            // console.log("no")
-            // break
+            let x = indexJson.search[Year][Month][Day][paperNum];
+            if(((typeof x)==undefined)&&((typeof x)=="undefined")){
+                break
+            }else{
+            }
+            // console.log(x);
+            break
         }catch{
-            // console.log("hhas")
+            // console.log(i)
             break
         }
         // if(indexJson.search[Year][Month][Day][paperNum]==undefined){
