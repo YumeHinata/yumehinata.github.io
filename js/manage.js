@@ -71,7 +71,92 @@ function turnBase64(str) {
     return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
       return String.fromCharCode('0x' + p1);
     }));
-  }
+}
+// 图片上传github
+function pushImage(pcc){
+    // 获取图片目录
+    let imgSearch = useJson("../img/index.json",function(){}).search;
+    // 判断新图片的路径
+    let d = new Date();
+    let Y = ""+d.getFullYear;
+    let M = ""+d.getMonth+1;
+    let D = ""+d.getDate;
+    if(Y.length<2){
+        Y = "0"+Y;
+    }
+    if(M.length<2){
+        M = "0"+M;
+    }
+    if(D.length<2){
+        D = "0"+D;
+    }
+    var imgNum;
+    let i = 0;
+    let fileType = document.getElementById("cover").style.backgroundImage.match(/(image(\S*);)/)[2];
+    if(fileType=="jpeg"){
+        fileType = "jpg";
+    }
+    while(1){
+        i++
+        try{
+            imgSearch[Y][M][D][i];
+        }catch{
+            imgNum = i;
+            break
+        }
+    }
+    var imgPath = "img/" + "/" + Y + "/" + M + "/" + D + "/" + imgNum + "." + fileType;
+    // 写入indexjson的内容
+    if(imgSearch[Y]==undefined){
+        imgSearch[Y] = {
+            [M]:{
+                [D]:{
+                    [imgNum]:{
+                        "path":imgPath,
+                        "url":window.location.origin+"/"+imgPath
+                    }
+                }
+            }
+        }
+    }
+    else if(imgSearch[Y][M]==undefined){
+        imgSearch[Y][M] = {
+            [D]:{
+                [imgNum]:{
+                    "path":imgPath,
+                    "url":window.location.origin+"/"+imgPath
+                }
+            }
+        }
+    }else if(imgSearch[Y][M][D]==undefined){
+        imgSearch[Y][M][D] = {
+            [imgNum]:{
+                "path":imgPath,
+                "url":window.location.origin+"/"+imgPath
+            }
+        }
+    }else if(imgSearch[Y][M][D][imgNum]==undefined){
+        imgSearch[Y][M][D][imgNum] = {
+            "path":imgPath,
+            "url":window.location.origin+"/"+imgPath
+        }
+    }
+    let search = imgSearch;
+    let imgJsonContent = {
+        search
+    }
+    let imgIndexContent = JSON.stringify(imgJsonContent);
+    let pushImgIndexContent = turnBase64(imgIndexContent);
+    // 获取token
+    let token = readToken();
+    // 获取图片目录sha
+    let imgIndexSha = octokitGet(token,"img/index.json");
+    // 上传目录
+    octokitPush(token,"img/index.json","3099729829@qq.com",imgIndexSha,pushImgIndexContent);
+    // 上传图片
+    octokitPush(token,imgPath,"3099729829@qq.com","",pcc);
+    return imgPath
+}
 // 新建博客
 var testEditor;
 var xNewMd = "./config/new.md";
@@ -118,8 +203,31 @@ $(function() {
                 //this.resize("100%", 640);
             }
         });
-        let writing = document.getElementById("writing");
-        writing.style.height = window.innerHeight + "px";
+        var pushE = document.getElementById("push");
+        var writingE =document.getElementById("writing");
+        writingE.style.height = window.innerHeight - 2 + "px";
+        writingE.style.width = main.offsetWidth - 270 + "px";
+        pushE.style.height = window.innerHeight + "px";
+        // 加载默认摘要内容，摘要默认为文章前30字+省略号
+        var writingText = document.getElementsByClassName("editormd-markdown-textarea")[0];
+        var summary = document.getElementsByClassName("summary")[0];
+        // console.log(writingText);
+        var ThereAreText = 0;
+        summary.onfocus = function(){
+            // console.log(ThereAreText)
+            summary.onchange = function(){
+                // 判断人工输入
+                ThereAreText = 1;
+                // console.log(ThereAreText)
+            }
+        }
+        $(".editormd-markdown-textarea").on('DOMNodeInserted',function(){
+            let text = writingText.innerHTML;
+            // console.log(text);
+            if((summary.value.length<30)&&(ThereAreText==0)){
+                summary.value = text;
+            }
+        });
     });
 });
 // 改变markdown大小
@@ -129,11 +237,15 @@ main.style.height = window.innerHeight + "px";
 window.onresize = function(){
     let main = document.getElementById("main");
     let writing = document.getElementById("writing");
+    var pushE = document.getElementById("push");
+    var writingE =document.getElementById("writing");
     main.style.width = window.innerWidth - 200 + "px";
     main.style.height = window.innerHeight + "px";
-    writing.style.height = window.innerHeight + "px";
+    writing.style.height = window.innerHeight - 2 + "px";
+    pushE.style.height = window.innerHeight + "px"
+    writingE.style.width = main.offsetWidth - pushE.offsetWidth + "px"
 }
-// 封面上传功能
+// 封面加载功能
 var coverFile = document.getElementById("coverFile");
 var cover = document.getElementById("cover");
 var reader = new FileReader();
@@ -141,11 +253,15 @@ coverFile.onchange = function(){
     var coverImgFile = this.files[0];
     reader.readAsDataURL(coverImgFile);
     reader.onload = function(){
-    // console.log(this.result);
-    cover.style.backgroundImage = "url(" + this.result + ")";
+        // console.log(this.result);
+        cover.style.backgroundImage = "url(" + this.result + ")";
+    }
 }
-}
-
+// 加载默认作者
+var authorE = document.getElementById("author");
+useJson("../page/config/config.json",function(){
+    authorE.value = json.userName;
+});
 // 提交功能的实现
 let commit = document.getElementById("commit");
 commit.onclick = async function(){
@@ -189,9 +305,25 @@ commit.onclick = async function(){
         //     break
         // }
     }
+    // 获取已经添加到封面内容
+    var pushCoverContent = "";
+    try{
+        let CoverContent = cover.style.backgroundImage;
+        pushCoverContent = CoverContent.match(/(base64,(\S*)\))/)[2];
+        // console.log(CoverContent +"!!!"+pushCoverContent);
+    }catch{
+    }
+    // 判断封面是否存在，是否调用上传封面函数
+    if(pushCoverContent==""){
+        var coverUrl = "";
+    }else{
+        var coverUrl = "../"+pushImage(pushCoverContent);
+    }
+    // 获取作者
+    let authorC = document.getElementById("author").value;
     // 读取并写入index.json
     let NewTitle = document.getElementById("newTitle").value;
-    let pushObj = {"year": Year,"month":Month,"day":Day,"paper":paperNum,"title":NewTitle,"image":"./img/2.jpg"};
+    let pushObj = {"year": Year,"month":Month,"day":Day,"paper":paperNum,"title":NewTitle,"image":coverUrl};
     let indexIndex = indexJson.index;
     indexIndex.push(pushObj);
     let index = indexIndex;
@@ -202,8 +334,8 @@ commit.onclick = async function(){
                 [Day]:{
                     [paperNum]:{
                         "title":NewTitle,
-                        "image":"../img/2.jpg",
-                        "author":"YumeHinata"
+                        "image":coverUrl,
+                        "author":authorC
                     }
                 }
             }
@@ -239,6 +371,7 @@ commit.onclick = async function(){
         search
     }
     indexContent = JSON.stringify(indexContent);
+    // console.log()
     // console.log(indexContent);
     // 判断标题和正文是否为空，为空则禁止上传
     let nweContent = document.getElementsByClassName("editormd-markdown-textarea")[0].innerHTML;
@@ -269,6 +402,5 @@ commit.onclick = async function(){
             octokitPush(gToken,newPath,"3099729829@qq.com","",pushContent);
         }
     }
-    
 }
 }
