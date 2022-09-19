@@ -73,26 +73,28 @@ function turnBase64(str) {
     }));
 }
 // 图片上传github
-function pushImage(pcc){
+async function pushImage(pcc){
     // 获取图片目录
     let imgSearch = useJson("../img/index.json",function(){}).search;
     // 判断新图片的路径
-    let d = new Date();
-    let Y = ""+d.getFullYear;
-    let M = ""+d.getMonth+1;
-    let D = ""+d.getDate;
+    let d = new Date;
+    var Y = d.getFullYear();
+    var M = d.getMonth()+1;
+    var D = d.getDate();
     if(Y.length<2){
-        Y = "0"+Y;
+        Y = ""+"0"+Y;
     }
     if(M.length<2){
-        M = "0"+M;
+        M = ""+"0"+M;
     }
     if(D.length<2){
-        D = "0"+D;
+        D = ""+"0"+D;
     }
+    console.log(Y)
+
     var imgNum;
     let i = 0;
-    let fileType = document.getElementById("cover").style.backgroundImage.match(/(image(\S*);)/)[2];
+    let fileType = document.getElementById("cover").style.backgroundImage.match(/(image\/(\S*);)/)[2];
     if(fileType=="jpeg"){
         fileType = "jpg";
     }
@@ -150,9 +152,10 @@ function pushImage(pcc){
     // 获取token
     let token = readToken();
     // 获取图片目录sha
-    let imgIndexSha = octokitGet(token,"img/index.json");
+    let imgIndexSha = await octokitGet(token,"img/index.json");
     // 上传目录
-    octokitPush(token,"img/index.json","3099729829@qq.com",imgIndexSha,pushImgIndexContent);
+    octokitPush(token,"img/index.json","3099729829@qq.com",imgIndexSha.sha,pushImgIndexContent);
+    // console.log(imgIndexSha.sha);
     // 上传图片
     octokitPush(token,imgPath,"3099729829@qq.com","",pcc);
     return imgPath
@@ -317,7 +320,7 @@ commit.onclick = async function(){
     if(pushCoverContent==""){
         var coverUrl = "";
     }else{
-        var coverUrl = "../"+pushImage(pushCoverContent);
+        var coverUrl = "../" + await pushImage(pushCoverContent);
     }
     // 获取作者
     let authorC = document.getElementById("author").value;
