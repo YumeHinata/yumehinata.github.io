@@ -271,66 +271,117 @@ window.onload = function () {
     // 提交功能的实现
     let commit = document.getElementById("commit");
     commit.onclick = async function () {
+        // console.log(qq);
+        // console.log(String.fromCharCode(ascii));
+        var gToken = readToken();
+        var d = new Date();
+        var Year = d.getFullYear();
+        if (("" + d.getMonth()).length < 2) {
+            Month = d.getMonth() + 1;
+            var Month = "" + "0" + Month;
+        } else {
+            var Month = d.getMonth() + 1;
+        }
+
+        if ("" + (d.getDate()).length < 2) {
+            var Day = "" + "0" + d.getDate();
+        } else {
+            var Day = d.getDate();
+        }
+        let newDate = Year + "/" + Month + "/" + Day;
+        // console.log(newDate);
+        // 判断第几篇文章
+        var indexJson = await useJson("../paper/index.json", function () { });
+        var i = 0;
+        while (1) {
+            i++;
+            var paperNum = "" + i;
+            // let x = indexJson.search[Year][Month][Day]
+            // console.log(x[i])
+            try {
+                let x = indexJson.search[Year][Month][Day][paperNum];
+                if (((typeof x) == undefined) && ((typeof x) == "undefined")) {
+                    break
+                } else {
+                }
+                // console.log(x);
+                break
+            } catch {
+                // console.log(i)
+                break
+            }
+            // if(indexJson.search[Year][Month][Day][paperNum]==undefined){
+            //     break
+            // }
+        }
+        // let NewTitle = document.getElementById("newTitle").value;
+        // 获取已经添加到封面内容
+        var pushCoverContent = "";
+        try {
+            let CoverContent = cover.style.backgroundImage;
+            pushCoverContent = CoverContent.match(/(base64,(\S*)"\))/)[2];
+            // console.log(CoverContent +"!!!"+pushCoverContent);
+        } catch {
+        }
+        // 判断封面是否存在，标题和内容是否存在，上一次提交是否完成，决定是否调用上传封面函数
+        if (pushCoverContent == "") {
+            var coverUrl = "";
+        } else {
+            var coverUrl = "../" + await pushImage(pushCoverContent);
+        }
+        // 获取作者
+        let authorC = document.getElementById("author").value;
+        // 读取并写入index.json
+        let NewTitle = document.getElementById("newTitle").value;
+        let pushObj = { "year": Year, "month": Month, "day": Day, "paper": paperNum, "title": NewTitle, "image": coverUrl };
+        let indexIndex = indexJson.index;
+        indexIndex.push(pushObj);
+        let index = indexIndex;
+        let indexSearch = indexJson.search;
+        if (indexSearch[Year] == undefined) {
+            indexSearch[Year] = {
+                [Month]: {
+                    [Day]: {
+                        [paperNum]: {
+                            "title": NewTitle,
+                            "image": coverUrl,
+                            "author": authorC
+                        }
+                    }
+                }
+            }
+        } else if (indexSearch[Year][Month] == undefined) {
+            indexSearch[Year][Month] = {
+                [Day]: {
+                    [paperNum]: {
+                        "title": NewTitle,
+                        "image": coverUrl,
+                        "author": authorC
+                    }
+                }
+            }
+        } else if (indexSearch[Year][Month][Day] == undefined) {
+            indexSearch[Year][Month][Day] = {
+                [paperNum]: {
+                    "title": NewTitle,
+                    "image": coverUrl,
+                    "author": authorC
+                }
+            }
+        } else if (indexSearch[Year][Month][Day][paperNum] == undefined) {
+            indexSearch[Year][Month][Day][paperNum] = {
+                "title": NewTitle,
+                "image": coverUrl,
+                "author": authorC
+            }
+        }
         // 判断标题和正文是否为空，为空则禁止上传
         let nweContent = document.getElementsByClassName("editormd-markdown-textarea")[0].innerHTML;
-        let NewTitle = document.getElementById("newTitle").value;
         if ((nweContent.length == 0) || (NewTitle.length == 0)) {
             let showConsole = document.getElementById("console");
             showConsole.innerHTML = "标题或正文不得为空";
             setTimeout(function () { showConsole.innerHTML = '' }, "3000");
         } else {
-            // console.log(qq);
-            // console.log(String.fromCharCode(ascii));
-            var gToken = readToken();
-            var d = new Date();
-            var Year = d.getFullYear();
-            if (("" + d.getMonth()).length < 2) {
-                Month = d.getMonth() + 1;
-                var Month = "" + "0" + Month;
-            } else {
-                var Month = d.getMonth() + 1;
-            }
-
-            if ("" + (d.getDate()).length < 2) {
-                var Day = "" + "0" + d.getDate();
-            } else {
-                var Day = d.getDate();
-            }
-            let newDate = Year + "/" + Month + "/" + Day;
-            // console.log(newDate);
-            // 判断第几篇文章
-            var indexJson = await useJson("../paper/index.json", function () { });
-            var i = 0;
-            while (1) {
-                i++;
-                var paperNum = "" + i;
-                // let x = indexJson.search[Year][Month][Day]
-                // console.log(x[i])
-                try {
-                    let x = indexJson.search[Year][Month][Day][paperNum];
-                    if (((typeof x) == undefined) && ((typeof x) == "undefined")) {
-                        break
-                    } else {
-                    }
-                    // console.log(x);
-                    break
-                } catch {
-                    // console.log(i)
-                    break
-                }
-                // if(indexJson.search[Year][Month][Day][paperNum]==undefined){
-                //     break
-                // }
-            }
-            // let NewTitle = document.getElementById("newTitle").value;
-            // 获取已经添加到封面内容
-            var pushCoverContent = "";
-            try {
-                let CoverContent = cover.style.backgroundImage;
-                pushCoverContent = CoverContent.match(/(base64,(\S*)"\))/)[2];
-                // console.log(CoverContent +"!!!"+pushCoverContent);
-            } catch {
-            }
             // 判断上一次提交是否完成
             let newPath = "paper/" + newDate + "/" + paperNum + ".md"
             try {
@@ -340,59 +391,6 @@ window.onload = function () {
                 showConsole.innerHTML = "上次提交尚未完成，请稍后再试";
                 setTimeout(function () { showConsole.innerHTML = '' }, "3000");
             } catch (err) {
-                // 判断封面是否存在，标题和内容是否存在，上一次提交是否完成，决定是否调用上传封面函数
-                if (pushCoverContent == "") {
-                    var coverUrl = "";
-                } else {
-                    var coverUrl = "../" + await pushImage(pushCoverContent);
-                }
-                // 获取作者
-                let authorC = document.getElementById("author").value;
-                // 读取并写入index.json
-                let NewTitle = document.getElementById("newTitle").value;
-                let pushObj = { "year": Year, "month": Month, "day": Day, "paper": paperNum, "title": NewTitle, "image": coverUrl };
-                let indexIndex = indexJson.index;
-                indexIndex.push(pushObj);
-                let index = indexIndex;
-                let indexSearch = indexJson.search;
-                if (indexSearch[Year] == undefined) {
-                    indexSearch[Year] = {
-                        [Month]: {
-                            [Day]: {
-                                [paperNum]: {
-                                    "title": NewTitle,
-                                    "image": coverUrl,
-                                    "author": authorC
-                                }
-                            }
-                        }
-                    }
-                } else if (indexSearch[Year][Month] == undefined) {
-                    indexSearch[Year][Month] = {
-                        [Day]: {
-                            [paperNum]: {
-                                "title": NewTitle,
-                                "image": coverUrl,
-                                "author": authorC
-                            }
-                        }
-                    }
-                } else if (indexSearch[Year][Month][Day] == undefined) {
-                    indexSearch[Year][Month][Day] = {
-                        [paperNum]: {
-                            "title": NewTitle,
-                            "image": coverUrl,
-                            "author": authorC
-                        }
-                    }
-                } else if (indexSearch[Year][Month][Day][paperNum] == undefined) {
-                    indexSearch[Year][Month][Day][paperNum] = {
-                        "title": NewTitle,
-                        "image": coverUrl,
-                        "author": authorC
-                    }
-                }
-                // 下面是上傳內容
                 let search = indexSearch;
                 let indexContent = {
                     index,
