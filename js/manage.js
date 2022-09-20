@@ -336,7 +336,7 @@ window.onload = function () {
             } catch {
             }
             // 获取摘要
-            var summary = document.getElementById("summary");
+            var summary = document.getElementsByClassName("summary")[0];
             var pushSummary = summary.value;
             // 判断上一次提交是否完成
             var newPath = "paper/" + newDate + "/" + paperNum + ".md"
