@@ -65,6 +65,13 @@ window.onresize = function(){
     let account = document.getElementById("account");
     archive.style.height = sidebar.offsetHeight-account.offsetHeight+"px";
 }
+$("#archive").on('DOMNodeInserted', function () {
+    let sidebar = document.getElementById("sidebar");
+    sidebar.style.height = showcaseHeight-75+"px"
+    let archive = document.getElementById("archive");
+    let account = document.getElementById("account");
+    archive.style.height = sidebar.offsetHeight-account.offsetHeight+"px";
+});
 var showcaseHeight = window.innerHeight;
 let showcase = document.getElementById("showcase");
 showcase.style.height = showcaseHeight+"px";
@@ -113,6 +120,7 @@ useJson("./paper/index.json",function(){
             aMonth.innerHTML = aMonth.innerHTML + '<div class="aDay '+e+'">'+e+'日 · '+t+'</div>';
         }
     }
+    // 歸檔完成後高度修正
 });
 // 加载发现页部分
 useJson("./paper/index.json",function(){
@@ -126,9 +134,10 @@ useJson("./paper/index.json",function(){
             x="right"
         }
         paperDate = index.year + '-' + index.month + '-' + index.day;
-        paperUrl = paperDate + "-" + index.paper
+        paperUrl = paperDate + "-" + index.paper;
         paperTitle = index.title;
-        mainPaper.innerHTML += '<div class="post ' + x + " " + paperUrl + '"><div class="post-thumb"></div><div class="post-content-wrap"><div class="post-content"><div class="post-date">' + paperDate + '</div><div class="post-title">' + paperTitle + '</div><div class="post-mate"></div><div class="float-content"></div></div><div class="beautify"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>';
+        let summaryC = index.summary;
+        mainPaper.innerHTML += '<div class="post ' + x + " " + paperUrl + '"><div class="post-thumb"></div><div class="post-content-wrap"><div class="post-content"><div class="post-date">' + paperDate + '</div><div class="post-title">' + paperTitle + '</div><div class="post-mate"></div><div class="float-content">' + summaryC + '</div></div><div class="beautify"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>';
         thisPaper = document.getElementsByClassName(paperUrl)[0].getElementsByClassName("post-thumb")[0];
         thisPaper.style.backgroundImage = 'url(' + index.image + ')';
     }

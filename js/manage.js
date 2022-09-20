@@ -335,6 +335,9 @@ window.onload = function () {
                 // console.log(CoverContent +"!!!"+pushCoverContent);
             } catch {
             }
+            // 获取摘要
+            var summary = document.getElementById("summary");
+            var pushSummary = summary.value;
             // 判断上一次提交是否完成
             var newPath = "paper/" + newDate + "/" + paperNum + ".md"
             try {
@@ -357,7 +360,7 @@ window.onload = function () {
                 let authorC = document.getElementById("author").value;
                 // 读取并写入index.json
                 let NewTitle = document.getElementById("newTitle").value;
-                let pushObj = { "year": Year, "month": Month, "day": Day, "paper": paperNum, "title": NewTitle, "image": coverUrl };
+                let pushObj = { "year": Year, "month": Month, "day": Day, "paper": paperNum, "title": NewTitle, "image": coverUrl ,"summary": pushSummary };
                 let indexIndex = indexJson.index;
                 indexIndex.push(pushObj);
                 let index = indexIndex;
