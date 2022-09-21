@@ -426,4 +426,38 @@ window.onload = function () {
             }
         }
     }
+    // 打开编辑页，并实现编辑页功能
+    // 点击sidebar-alter（编辑）后隐藏writing和push,显示main-alter
+    let sidebarAlter = document.getElementsByClassName("sidebar-alter")[0];
+    sidebarAlter.onclick = function(){
+        let mainWriting = document.getElementById("writing");
+        let mainPush = document.getElementById("push");
+        let mainAlter = document.getElementById("main-alter");
+        mainWriting.style.display = "none";
+        mainPush.style.display = "none";
+        mainAlter.style.display = "block"
+        // 点击后加载文章列表
+        useJson("../paper/index.json",function(){
+            var paperIndex = json.index;
+            let PaperList = document.getElementsByClassName("paper-list")[0];
+            for(let i=0;i < paperIndex.length;i++){
+                // 获取日期、标题
+                let paperDate = paperIndex[i].year + "-" + paperIndex[i].month + "-" + paperIndex[i].day;
+                let paperUrl = paperIndex[i].year + "-" + paperIndex[i].month + "-" + paperIndex[i].day + "-" + paperIndex[i].paper;
+                PaperList.innerHTML += '<li class="list-p ' + paperDate + '"><span class="' + paperIndex[i].year + '">' + paperIndex[i].year + '</span><span class="' + paperIndex[i].year+'-'+paperIndex[i].month + '">' + paperIndex[i].month + '</span>' + '<span class="' + paperDate + '">' + paperIndex[i].day + '</span>' + '<a href="../page/paper.html?number=' + paperUrl + '"class="paper-title">' + paperIndex[i].title + '</a><a href="javascript:;">编辑</a> / <a href="javascript:;">删除</a></li>';
+            }
+            console.log(paperIndex)
+        });
+    }
+
+    // 点击sidebar-writing（写作）后恢复writing和push,隐藏main-alter
+    let sidebarWriting = document.getElementsByClassName("sidebar-writing")[0];
+    sidebarWriting.onclick = function(){
+        let mainWriting = document.getElementById("writing");
+        let mainPush = document.getElementById("push");
+        let mainAlter = document.getElementById("main-alter");
+        mainWriting.style.display = "block";
+        mainPush.style.display = "block";
+        mainAlter.style.display = "none"
+    }
 }
