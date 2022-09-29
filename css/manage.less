@@ -35,7 +35,8 @@
         }
     }
 }
-#push {
+#push,
+#main-oldPush {
     width: 270px;
     overflow-y: scroll;
     overflow-x: visible;
@@ -45,7 +46,8 @@
         margin-top: 20px;
         margin-left: 5px;
     }
-    #newTitle{
+    #newTitle,
+    .oldTitle{
         width: 240px;
         margin-top: 10px;
         height: 20px;
@@ -54,7 +56,8 @@
         margin-right: 5px;
         border-radius: 10px;
     }
-    #cover {
+    #cover,
+    .oldCover{
         width: 240px;
         margin-top: 10px;
         margin-left: 5px;
@@ -66,14 +69,16 @@
         background-position: center;
         background-size: cover;
     }
-    #coverFile {
+    #coverFile,
+    .coverFile{
         margin-top: 10px;
         margin-left: 5px;
         margin-right: 5px;
         width: 240px;
         overflow: hidden;
     }
-    #author{
+    #author,
+    .author{
         width: 240px;
         margin-top: 10px;
         height: 20px;
@@ -93,7 +98,8 @@
         margin-top: 10px;
 
     }
-    #commit {
+    #commit,
+    .commit{
         margin-top: 10px;
         margin-left: 5px;
         width: 50px;
@@ -103,6 +109,10 @@
         text-align: center;
         border-radius: 10px;
     }
+}
+#main-oldPush,
+#main-oldWriting{
+    display: none;
 }
 #push::-webkit-scrollbar-track{
     background-color: #fff;
@@ -135,8 +145,12 @@
     padding-left: 10px;
     span{
         display: inline-block;
-        height: 21px;
-        padding: 0 10px;
+        line-height: 20px;
+        height: 20px;
+        // width: 40px;
+        margin: 0 10px;
+        text-align: center;
+        overflow: hidden;
     }
     .paper-list{
         border-top: 1px rgb(106, 106, 106) solid;
@@ -145,17 +159,25 @@
     .list-p {
         border-bottom: 1px rgb(106, 106, 106) solid;
         height: 20px;
-        line-height: 21px;
+        line-height: 20px;
+        overflow: hidden;
+        // text-align: center;
     }
     .paper-title{
         // line-height: 21px;
         display: inline-block;
-        width: 100px;
+        width: 150px;
         text-align: center;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         margin: 0 10px;
         text-decoration: none;
+    }
+    a{
+        display: inline-block;
+        overflow: hidden;
+        text-decoration: none;
+        color: #000;
     }
 }
