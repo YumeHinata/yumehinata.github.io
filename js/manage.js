@@ -240,7 +240,7 @@ window.onload = function () {
     var testEditor;
     var xNewMd = "./config/new.md";
     $(function () {
-        edMarkdown(xNewMd,"writing");
+        edMarkdown(xNewMd, "writing");
     });
     // 改变markdown大小
     let main = document.getElementById("main");
@@ -479,19 +479,19 @@ window.onload = function () {
                     // 调用markdown并载入相应的文章
                     // 获取classname中的日期并获取文件路径
                     let mdUrl = this.className;
-                    mdUrl = "../paper/" + mdUrl.replace("paper-alter ","").replace(/-/g,"/") + ".md";
+                    mdUrl = "../paper/" + mdUrl.replace("paper-alter ", "").replace(/-/g, "/") + ".md";
                     // console.log(mdUrl);
-                    edMarkdown(mdUrl,"main-oldWriting");
+                    edMarkdown(mdUrl, "main-oldWriting");
                     // 生成main-oldPush
                     let mainOldPush = document.getElementById("main-oldPush");
                     let pushE = document.getElementById("push");
                     mainOldPush.innerHTML = '<h4>标题:</h4><input class="oldTitle"><h4>封面：</h4><div class="oldCover"></div><input type="file" name="" class="coverFile"><h4>摘要:</h4><textarea name="" cols="30" rows="10" class="summary"></textarea><h4>作者:</h4><input class="author"><div class="commit">提交</div>';
                     // 改变标题、封面、作者、摘要元素中的内容
-                    var paperIndexSearch = await useJson("../paper/index.json",function(){}).search;
-                    let Year = this.className.replace("paper-alter ","").match(/[0-9]{4}/)[0];
-                    let Month = this.className.replace("paper-alter ","").replace(/-/g,"").match(/[0-9]{6}/)[0].replace(Year,"");
-                    let Day = this.className.replace("paper-alter ","").replace(/-/g,"").match(/[0-9]{8}/)[0].replace(Year,"").replace(Month,"");
-                    let Page = this.className.replace("paper-alter ","").replace(/-/g,"").replace(Year,"").replace(Month,"").replace(Day,"");
+                    var paperIndexSearch = await useJson("../paper/index.json", function () { }).search;
+                    let Year = this.className.replace("paper-alter ", "").match(/[0-9]{4}/)[0];
+                    let Month = this.className.replace("paper-alter ", "").replace(/-/g, "").match(/[0-9]{6}/)[0].replace(Year, "");
+                    let Day = this.className.replace("paper-alter ", "").replace(/-/g, "").match(/[0-9]{8}/)[0].replace(Year, "").replace(Month, "");
+                    let Page = this.className.replace("paper-alter ", "").replace(/-/g, "").replace(Year, "").replace(Month, "").replace(Day, "");
                     let oldTitleContent = paperIndexSearch[Year][Month][Day][Page].title;
                     let oldPushTitle = document.getElementById("main-oldPush").getElementsByClassName("oldTitle")[0];
                     oldPushTitle.value = oldTitleContent;
@@ -500,23 +500,130 @@ window.onload = function () {
                     oldPushCover.style.backgroundImage = "url('" + oldCoverContent + "')";
                     let oldSummaryContent = paperIndexSearch[Year][Month][Day][Page].summary;
                     let oldPushSummary = document.getElementById("main-oldPush").getElementsByClassName("summary")[0];
-                    if((typeof oldSummaryContent=="undefined")){
+                    if ((typeof oldSummaryContent == "undefined")) {
                         oldPushSummary.value = "";
-                    }else{
+                    } else {
                         oldPushSummary.value = oldSummaryContent;
                     }
-                    
-                    console.log(oldCoverContent);
+                    let oldAuthorContent = paperIndexSearch[Year][Month][Day][Page].author;
+                    let oldPushAuthor = document.getElementById("main-oldPush").getElementsByClassName("author")[0];
+                    oldPushAuthor.value = oldAuthorContent;
+                    // console.log(oldCoverContent);
+                    // 申明一个全局变量接收文章的编号
+                    var paperNumber = mdUrl;
                     // 显示oldWriting和oldPush
                     let mainOldWriting = document.getElementById("main-oldWriting");
                     mainOldPush.style.display = "block";
                     mainOldWriting.style.display = "block";
-                    
+                    // 封面改变
+                    let oldPushCoverFile = document.getElementById("main-oldPush").getElementsByClassName("coverFile")[0];
+                    oldPushCoverFile.onchange = function () {
+                        var coverImgFile = this.files[0];
+                        reader.readAsDataURL(coverImgFile);
+                        reader.onload = function () {
+                            // console.log(this.result);
+                            oldPushCover.style.backgroundImage = "url(" + this.result + ")";
+                        }
+                    }
+                    // 旧文章修改后提交
+                    let recommit = document.getElementById("main-oldPush").getElementsByClassName("commit")[0];
+                    recommit.onclick = async function () {
+                        // 检测标题、封面、摘要、作者是否存在
+                        let oldPushTitle = document.getElementById("main-oldPush").getElementsByClassName("oldTitle")[0];
+                        let oldPushCover = document.getElementById("main-oldPush").getElementsByClassName("oldCover")[0];
+                        let oldPushSummary = document.getElementById("main-oldPush").getElementsByClassName("summary")[0];
+                        let oldPushAuthor = document.getElementById("main-oldPush").getElementsByClassName("author")[0];
+                        let consoleE = document.getElementById("console");
+                        var pC = 0;
+                        // console.log("sss")
+                        switch ("") {
+                            case oldPushTitle.value:
+                                consoleE.innerHTML = "标题不得为空";
+                                setTimeout(function () { consoleE.innerHTML = '' }, "3000");
+                                break;
+                            case oldPushCover.style.backgroundImage:
+                                consoleE.innerHTML = "封面不得为空";
+                                setTimeout(function () { consoleE.innerHTML = '' }, "3000");
+                                break;
+                            case oldPushSummary.value:
+                                consoleE.innerHTML = "摘要不得为空";
+                                setTimeout(function () { consoleE.innerHTML = '' }, "3000");
+                                break;
+                            case oldPushAuthor.value:
+                                consoleE.innerHTML = "作者不得为空";
+                                setTimeout(function () { consoleE.innerHTML = '' }, "3000");
+                                break;
+                            default:
+                                pC = 1;
+                        }
+                        // pC为1这意味满足需要存在的内容
+                        if(pC==1){
+                            // 获取当前文章的地址->sha，地址存储在文章编号paperNumber中;获取文章的内容，并转换为base64
+                            let mdSha = await octokitGet(readToken(),paperNumber.replace("../",""));
+                            let oldWritingContent = document.getElementById("main-oldWriting").getElementsByClassName("editormd-markdown-textarea")[0].innerHTML;
+                            let pushOldWritingContent = turnBase64(oldWritingContent);
+                            // 获取目录的sha;修改目录中已有的对象，index对象是数组需要一个索引，遍历一下
+                            let paperIndexSha = octokitGet(readToken(),"paper/index.json");
+                            paperIndexSha = paperIndexSha.sha;
+                            let pN = paperNumber.match(/[0-9]/g).join("");
+                            let Year = pN.slice(0,4);
+                            let Month = pN.slice(4,6);
+                            let Day = pN.slice(6,8);
+                            let Paper = pN.slice(8);
+                            let paperIndexIndex = useJson("../paper/index.json",function(){});
+                            paperIndexIndex = paperIndexIndex.index;
+                            // let x =[];
+                            for(let i=0;i < paperIndexIndex.length;i++){
+                                if(paperIndexIndex[i].year==Year){
+                                    if(paperIndexIndex[i].month==Month){
+                                        if(paperIndexIndex[i].day==Day){
+                                            if(paperIndexIndex[i].paper==Paper){
+                                                var oldPaperIndex = i;
+                                                break;
+                                            }else if(paperIndexIndex[i].paper>Paper){
+                                                break;
+                                            } 
+                                        }else if(paperIndexIndex[i].day>Day){
+                                            break;
+                                        }        
+                                    }else if(paperIndexIndex[i].month>Month){
+                                        break;
+                                    }    
+                                }else if(paperIndexIndex[i].year>Year){
+                                    break;
+                                }
+                            }
+                            paperIndexIndex[oldPaperIndex].title = oldPushTitle.value;
+                            paperIndexIndex[oldPaperIndex].summary = oldPushSummary.value;
+                            paperIndexIndex[oldPaperIndex].author = oldPushAuthor.value;
+                            // 判断封面是否改变，改变需要先提交封面
+                            let oldPushCoverFile = document.getElementById("main-oldPush").getElementsByClassName("coverFile")[0];
+                            if(oldPushCoverFile.value!=""){
+                                let oldPushCover = document.getElementById("main-oldPush").getElementsByClassName("oldCover")[0];
+                                let oldPushCoverContent = oldPushCover.style.backgroundImage.match(/(base64,(\S*)"\))/)[2];
+                                paperIndexIndex[oldPaperIndex].image = await pushImage(oldPushCoverContent);
+                                paperIndexSearch[Year][Month][Day][Paper].image = paperIndexIndex[oldPaperIndex].image;
+                            }
+                            // 改变paperIndexSearch对应修改的内容
+                            paperIndexSearch[Year][Month][Day][Paper].title = oldPushTitle.value;
+                            paperIndexSearch[Year][Month][Day][Paper].summary = oldPushSummary.value;
+                            paperIndexSearch[Year][Month][Day][Paper].author = oldPushAuthor.value;
+                            // 生成paperIndexContent
+                            let paperIndexContent = {
+                                "index":paperIndexIndex,
+                                "search":paperIndexSearch
+                            }
+                            let pushPaperIndexContent = turnBase64(paperIndexContent);
+                            console.log(paperIndexContent);
+                            // 提交修改后的md文件、文章目录json
+                            octokitPush(readToken(),paperNumber.replace("../",""),"3099729829@qq.com",mdSha,pushOldWritingContent);
+                            octokitPush(readToken(),"paper/index.json","3099729829@qq.com",paperIndexSha,pushPaperIndexContent);
+                        }
+                    }
                 }
             }
         });
     }
-
     // 点击sidebar-writing（写作）后恢复writing和push,隐藏main-alter,main-oldWriting,main-oldWriting
     let sidebarWriting = document.getElementsByClassName("sidebar-writing")[0];
     sidebarWriting.onclick = function () {
