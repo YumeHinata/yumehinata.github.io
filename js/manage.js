@@ -559,7 +559,7 @@ window.onload = function () {
                             let oldWritingContent = document.getElementById("main-oldWriting").getElementsByClassName("editormd-markdown-textarea")[0].innerHTML;
                             let pushOldWritingContent = turnBase64(oldWritingContent);
                             // 获取目录的sha;修改目录中已有的对象，index对象是数组需要一个索引，遍历一下
-                            let paperIndexSha = octokitGet(readToken(),"paper/index.json");
+                            let paperIndexSha = await octokitGet(readToken(),"paper/index.json");
                             paperIndexSha = paperIndexSha.sha;
                             let pN = paperNumber.match(/[0-9]/g).join("");
                             let Year = pN.slice(0,4);
@@ -610,10 +610,11 @@ window.onload = function () {
                                 "search":paperIndexSearch
                             }
                             let pushPaperIndexContent = turnBase64(paperIndexContent);
-                            console.log(paperIndexContent);
+                            // console.log(paperIndexContent);
                             // 提交修改后的md文件、文章目录json
                             octokitPush(readToken(),paperNumber.replace("../",""),"3099729829@qq.com",mdSha.sha,pushOldWritingContent);
                             octokitPush(readToken(),"paper/index.json","3099729829@qq.com",paperIndexSha,pushPaperIndexContent);
+                            // console.log(paperIndexSha);
                         }
                     }
                 }
