@@ -250,7 +250,6 @@ window.onload = function () {
         let main = document.getElementById("main");
         let writing = document.getElementById("writing");
         var pushE = document.getElementById("push");
-        var writingE = document.getElementById("writing");
         let oldWriting = document.getElementById("main-oldWriting");
         let oldPush = document.getElementById("main-oldPush");
         main.style.width = window.innerWidth - 200 + "px";
@@ -258,7 +257,6 @@ window.onload = function () {
         writing.style.height = window.innerHeight - 2 + "px";
         pushE.style.height = window.innerHeight + "px"
         oldPush.style.height = window.innerHeight + "px"
-        writingE.style.width = main.offsetWidth - oldPush.offsetWidth + "px"
         oldWriting.style.height = window.innerHeight - 2 + "px";
         oldWriting.style.width = main.offsetWidth - oldPush.offsetWidth + "px"
     }
