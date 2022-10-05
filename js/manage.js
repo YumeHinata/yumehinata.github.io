@@ -597,7 +597,7 @@ window.onload = function () {
                             if(oldPushCoverFile.value!=""){
                                 let oldPushCover = document.getElementById("main-oldPush").getElementsByClassName("oldCover")[0];
                                 let oldPushCoverContent = oldPushCover.style.backgroundImage;//.match(/(base64,(\S*)"\))/)[2];
-                                paperIndexIndex[oldPaperIndex].image = await pushImage(oldPushCoverContent);
+                                paperIndexIndex[oldPaperIndex].image = "../" +  await pushImage(oldPushCoverContent);
                                 paperIndexSearch[Year][Month][Day][Paper].image = paperIndexIndex[oldPaperIndex].image;
                             }
                             // 改变paperIndexSearch对应修改的内容
