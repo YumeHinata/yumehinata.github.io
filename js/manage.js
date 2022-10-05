@@ -295,17 +295,13 @@ window.onload = function () {
             var gToken = readToken();
             var d = new Date();
             var Year = d.getFullYear();
-            if (("" + d.getMonth()).length < 2) {
-                Month = d.getMonth() + 1;
-                var Month = "" + "0" + Month;
-            } else {
-                var Month = d.getMonth() + 1;
+            var Month = (d.getMonth() + 1)+"";
+            var Day = (d.getDate())+"";
+            if (Month.length < 2) {
+                Month = "" + "0" + Month;
             }
-
-            if ("" + (d.getDate()).length < 2) {
-                var Day = "" + "0" + d.getDate();
-            } else {
-                var Day = d.getDate();
+            if (Day.length < 2) {
+                Day = "" + "0" + Day;
             }
             let newDate = Year + "/" + Month + "/" + Day;
             // console.log(newDate);
