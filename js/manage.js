@@ -163,7 +163,7 @@ window.onload = function () {
 
         // var imgNum;
         let i = 1;
-        let fileType = document.getElementById("cover").style.backgroundImage.match(/(image\/(\S*);)/)[2];
+        let fileType = pcc.match(/(image\/(\S*);)/)[2];
         if (fileType == "jpeg") {
             fileType = "jpg";
         }
@@ -232,7 +232,8 @@ window.onload = function () {
         octokitPush(token, "img/index.json", "3099729829@qq.com", imgIndexSha.sha, pushImgIndexContent);
         // console.log(imgIndexSha.sha);
         // 上传图片
-        octokitPush(token, imgPath, "3099729829@qq.com", "", pcc);
+        let pccc = pcc.match(/(base64,(\S*)"\))/)[2]
+        octokitPush(token, imgPath, "3099729829@qq.com", "", pccc);
         // console.log(pcc)
         return imgPath
     }
@@ -334,7 +335,8 @@ window.onload = function () {
             var pushCoverContent = "";
             try {
                 let CoverContent = cover.style.backgroundImage;
-                pushCoverContent = CoverContent.match(/(base64,(\S*)"\))/)[2];
+                // pushCoverContent = CoverContent.match(/(base64,(\S*)"\))/)[2];
+                pushCoverContent = CoverContent;
                 // console.log(CoverContent +"!!!"+pushCoverContent);
             } catch {
             }
@@ -594,7 +596,7 @@ window.onload = function () {
                             let oldPushCoverFile = document.getElementById("main-oldPush").getElementsByClassName("coverFile")[0];
                             if(oldPushCoverFile.value!=""){
                                 let oldPushCover = document.getElementById("main-oldPush").getElementsByClassName("oldCover")[0];
-                                let oldPushCoverContent = oldPushCover.style.backgroundImage.match(/(base64,(\S*)"\))/)[2];
+                                let oldPushCoverContent = oldPushCover.style.backgroundImage;//.match(/(base64,(\S*)"\))/)[2];
                                 paperIndexIndex[oldPaperIndex].image = await pushImage(oldPushCoverContent);
                                 paperIndexSearch[Year][Month][Day][Paper].image = paperIndexIndex[oldPaperIndex].image;
                             }
