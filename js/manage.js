@@ -609,12 +609,13 @@ window.onload = function () {
                                 "index":paperIndexIndex,
                                 "search":paperIndexSearch
                             }
+                            paperIndexContent = JSON.stringify(paperIndexContent);
                             let pushPaperIndexContent = turnBase64(paperIndexContent);
                             // console.log(paperIndexContent);
                             // 提交修改后的md文件、文章目录json
-                            octokitPush(readToken(),paperNumber.replace("../",""),"3099729829@qq.com",mdSha.sha,pushOldWritingContent);
-                            octokitPush(readToken(),"paper/index.json","3099729829@qq.com",paperIndexSha,pushPaperIndexContent);
-                            // console.log(paperIndexSha);
+                            // octokitPush(readToken(),paperNumber.replace("../",""),"3099729829@qq.com",mdSha.sha,pushOldWritingContent);
+                            // octokitPush(readToken(),"paper/index.json","3099729829@qq.com",paperIndexSha,pushPaperIndexContent);
+                            // console.log(pushPaperIndexContent);
                         }
                     }
                 }
