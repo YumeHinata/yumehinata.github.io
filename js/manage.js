@@ -610,7 +610,7 @@ window.onload = function () {
                             let pushPaperIndexContent = turnBase64(paperIndexContent);
                             console.log(paperIndexContent);
                             // 提交修改后的md文件、文章目录json
-                            octokitPush(readToken(),paperNumber.replace("../",""),"3099729829@qq.com",mdSha,pushOldWritingContent);
+                            octokitPush(readToken(),paperNumber.replace("../",""),"3099729829@qq.com",mdSha.sha,pushOldWritingContent);
                             octokitPush(readToken(),"paper/index.json","3099729829@qq.com",paperIndexSha,pushPaperIndexContent);
                         }
                     }
