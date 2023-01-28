@@ -513,8 +513,8 @@ window.onload = function () {
                     if(deletePrompt==deleteMdSha.sha){
                         indexJson.index.splice(deletePageIndexNum,1);
                         delete indexJson.search[Year][Month][Day][Page];
-                        octokitPush(readToken(),"paper/index.json","3099729829@qq.com",updateIndexJsonSha,indexJson);
-                        octokitDelete(readToken(),mdPath,"3099729829@qq.com",deleteMdSha);
+                        octokitPush(readToken(),"paper/index.json","3099729829@qq.com",updateIndexJsonSha.sha,turnBase64(JSON.stringify(indexJson)));
+                        octokitDelete(readToken(),mdPath,"3099729829@qq.com",deleteMdSha.sha);
                         // console.log(indexJson);
                     }
                 }
