@@ -26,6 +26,8 @@ window.onload = function () {
         }
         return token;
     }
+    // 加载config.json文件
+    var configJson = useJson("../page/config/config.json",function(){});
     // 创建或更新文件内容的函数
     function octokitPush(tk, pt, em, sa, ct) {
         var octokit = new Octokit({
@@ -65,6 +67,23 @@ window.onload = function () {
         }
         let result = await res();
         return result.data;
+    }
+    async function octokitDelete(tk, pt,em,sa) {
+        const octokit = new Octokit({
+            auth: tk
+        })
+
+        octokit.request('DELETE /repos/{owner}/{repo}/contents/{path}', {
+            owner: configJson.userName,
+            repo: configJson.userName+".github.io",
+            path: pt,
+            message: "删除文件",
+            committer: {
+                name: configJson.userName,
+                email: em
+            },
+            sha: sa
+        })
     }
     // 字符串转base64的函数
     function turnBase64(str) {
@@ -294,8 +313,8 @@ window.onload = function () {
             var gToken = readToken();
             var d = new Date();
             var Year = d.getFullYear();
-            var Month = (d.getMonth() + 1)+"";
-            var Day = (d.getDate())+"";
+            var Month = (d.getMonth() + 1) + "";
+            var Day = (d.getDate()) + "";
             if (Month.length < 2) {
                 Month = "" + "0" + Month;
             }
@@ -452,7 +471,7 @@ window.onload = function () {
         mainOldPush.style.display = "none";
         mainOldWriting.style.display = "none";
         // 点击后加载文章列表
-        useJson("../paper/index.json", function () {
+        var indexJson = useJson("../paper/index.json", function () {
             var paperIndex = json.index;
             let PaperList = document.getElementsByClassName("paper-list")[0];
             PaperList.innerHTML = "";
@@ -464,6 +483,42 @@ window.onload = function () {
 
             }
             // console.log(paperIndex)
+            // 删除文章按钮
+            var paperDelete = document.getElementsByClassName("paper-delete");
+            for (let c = 0; c < paperDelete.length; c++) {
+                paperDelete[c].onclick = async function () {
+                    // 获取对应文章信息
+                    let mdUrl = this.className;
+                    let mdPath = "paper/" + mdUrl.replace("paper-delete ", "").replace(/-/g,"/") + ".md";
+                    // console.log(indexJson.index.length);
+                    // 查找index.json中相关位置
+                    let Year = mdUrl.replace("paper-delete ", "").match(/[0-9]{4}/)[0];
+                    let Month = mdUrl.replace("paper-delete ", "").replace(/-/g, "").match(/[0-9]{6}/)[0].replace(Year, "");
+                    let Day = mdUrl.replace("paper-delete ", "").replace(/-/g, "").match(/[0-9]{8}/)[0].replace(Year, "").replace(Month, "");
+                    let Page = mdUrl.replace("paper-delete ", "").replace(/-/g, "").replace(Year, "").replace(Month, "").replace(Day, "");
+                    for(let q=0;q<indexJson.index.length;q++){
+                        let deletePageIndex = indexJson.index[q];
+                        // console.log(deletePageIndex.year)
+                        if((Year+Month+Day+Page+"")==(deletePageIndex.year+deletePageIndex.month+deletePageIndex.day+deletePageIndex.paper+"")){
+                            var deletePageIndexNum = q;
+                            break
+                        }
+                    }
+                    // 获取md文件sha
+                    let deleteMdSha = await octokitGet(readToken(),mdPath);
+                    // 获取index.json文件sha
+                    let updateIndexJsonSha = await octokitGet(readToken(),"paper/index.json");
+                    // 删除确认提示框
+                    let deletePrompt = prompt("您正在删除文章《"+ indexJson.index[deletePageIndexNum].title +"》，确认删除请在对话框中输入文件的sha并点击确认删除。sha："+ deleteMdSha.sha);
+                    if(deletePrompt==deleteMdSha.sha){
+                        indexJson.index.splice(deletePageIndexNum,1);
+                        delete indexJson.search[Year][Month][Day][Page];
+                        octokitPush(readToken(),"paper/index.json","3099729829@qq.com",updateIndexJsonSha,indexJson);
+                        octokitDelete(readToken(),mdPath,"3099729829@qq.com",deleteMdSha);
+                        // console.log(indexJson);
+                    }
+                }
+            }
             // 编辑文章按钮
             var paperAlter = document.getElementsByClassName("paper-alter");
             for (let i = 0; i < paperAlter.length; i++) {
@@ -553,39 +608,39 @@ window.onload = function () {
                                 pC = 1;
                         }
                         // pC为1这意味满足需要存在的内容
-                        if(pC==1){
+                        if (pC == 1) {
                             // 获取当前文章的地址->sha，地址存储在文章编号paperNumber中;获取文章的内容，并转换为base64
-                            let mdSha = await octokitGet(readToken(),paperNumber.replace("../",""));
+                            let mdSha = await octokitGet(readToken(), paperNumber.replace("../", ""));
                             let oldWritingContent = document.getElementById("main-oldWriting").getElementsByClassName("editormd-markdown-textarea")[0].innerHTML;
                             let pushOldWritingContent = turnBase64(oldWritingContent);
                             // 获取目录的sha;修改目录中已有的对象，index对象是数组需要一个索引，遍历一下
-                            let paperIndexSha = await octokitGet(readToken(),"paper/index.json");
+                            let paperIndexSha = await octokitGet(readToken(), "paper/index.json");
                             paperIndexSha = paperIndexSha.sha;
                             let pN = paperNumber.match(/[0-9]/g).join("");
-                            let Year = pN.slice(0,4);
-                            let Month = pN.slice(4,6);
-                            let Day = pN.slice(6,8);
+                            let Year = pN.slice(0, 4);
+                            let Month = pN.slice(4, 6);
+                            let Day = pN.slice(6, 8);
                             let Paper = pN.slice(8);
-                            let paperIndexIndex = useJson("../paper/index.json",function(){});
+                            let paperIndexIndex = useJson("../paper/index.json", function () { });
                             paperIndexIndex = paperIndexIndex.index;
                             // let x =[];
-                            for(let i=0;i < paperIndexIndex.length;i++){
-                                if(paperIndexIndex[i].year==Year){
-                                    if(paperIndexIndex[i].month==Month){
-                                        if(paperIndexIndex[i].day==Day){
-                                            if(paperIndexIndex[i].paper==Paper){
+                            for (let i = 0; i < paperIndexIndex.length; i++) {
+                                if (paperIndexIndex[i].year == Year) {
+                                    if (paperIndexIndex[i].month == Month) {
+                                        if (paperIndexIndex[i].day == Day) {
+                                            if (paperIndexIndex[i].paper == Paper) {
                                                 var oldPaperIndex = i;
                                                 break;
-                                            }else if(paperIndexIndex[i].paper>Paper){
+                                            } else if (paperIndexIndex[i].paper > Paper) {
                                                 break;
-                                            } 
-                                        }else if(paperIndexIndex[i].day>Day){
+                                            }
+                                        } else if (paperIndexIndex[i].day > Day) {
                                             break;
-                                        }        
-                                    }else if(paperIndexIndex[i].month>Month){
+                                        }
+                                    } else if (paperIndexIndex[i].month > Month) {
                                         break;
-                                    }    
-                                }else if(paperIndexIndex[i].year>Year){
+                                    }
+                                } else if (paperIndexIndex[i].year > Year) {
                                     break;
                                 }
                             }
@@ -594,10 +649,10 @@ window.onload = function () {
                             paperIndexIndex[oldPaperIndex].author = oldPushAuthor.value;
                             // 判断封面是否改变，改变需要先提交封面
                             let oldPushCoverFile = document.getElementById("main-oldPush").getElementsByClassName("coverFile")[0];
-                            if(oldPushCoverFile.value!=""){
+                            if (oldPushCoverFile.value != "") {
                                 let oldPushCover = document.getElementById("main-oldPush").getElementsByClassName("oldCover")[0];
                                 let oldPushCoverContent = oldPushCover.style.backgroundImage;//.match(/(base64,(\S*)"\))/)[2];
-                                paperIndexIndex[oldPaperIndex].image = "../" +  await pushImage(oldPushCoverContent);
+                                paperIndexIndex[oldPaperIndex].image = "../" + await pushImage(oldPushCoverContent);
                                 paperIndexSearch[Year][Month][Day][Paper].image = paperIndexIndex[oldPaperIndex].image;
                             }
                             // 改变paperIndexSearch对应修改的内容
@@ -606,15 +661,15 @@ window.onload = function () {
                             paperIndexSearch[Year][Month][Day][Paper].author = oldPushAuthor.value;
                             // 生成paperIndexContent
                             let paperIndexContent = {
-                                "index":paperIndexIndex,
-                                "search":paperIndexSearch
+                                "index": paperIndexIndex,
+                                "search": paperIndexSearch
                             }
                             paperIndexContent = JSON.stringify(paperIndexContent);
                             let pushPaperIndexContent = turnBase64(paperIndexContent);
                             // console.log(paperIndexContent);
                             // 提交修改后的md文件、文章目录json
-                            octokitPush(readToken(),paperNumber.replace("../",""),"3099729829@qq.com",mdSha.sha,pushOldWritingContent);
-                            octokitPush(readToken(),"paper/index.json","3099729829@qq.com",paperIndexSha,pushPaperIndexContent);
+                            octokitPush(readToken(), paperNumber.replace("../", ""), "3099729829@qq.com", mdSha.sha, pushOldWritingContent);
+                            octokitPush(readToken(), "paper/index.json", "3099729829@qq.com", paperIndexSha, pushPaperIndexContent);
                             // console.log(paperIndexContent);
                         }
                     }
