@@ -27,27 +27,28 @@ window.onload = function () {
         return token;
     }
     // 加载config.json文件
-    var configJson = useJson("../page/config/config.json",function(){});
+    var configJson = useJson("../page/config/config.json", function () { });
+    configJson = useJson("https://raw.githubusercontent.com/" + configJson.userName + "/" + configJson.userName + ".github.io/main/page/config/config.json",function(){});
+    // 加载index.json文件
+    var indexJson = useJson("https://raw.githubusercontent.com/" + configJson.userName + "/" + configJson.userName + ".github.io/main/paper/index.json", function () { });
     // 创建或更新文件内容的函数
     function octokitPush(tk, pt, em, sa, ct) {
         var octokit = new Octokit({
             auth: tk
         });
-        useJson("./config/config.json", function () {
-            let name = window.json.userName;
-            octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-                owner: name,
-                repo: json.userName + '.github.io',
-                path: pt,
-                message: 'a new commit message',
-                committer: {
-                    name: json.userName,
-                    email: em
-                },
-                content: ct,
-                sha: sa
-            })
-        });
+        let name = configJson.userName;
+        octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+            owner: name,
+            repo: json.userName + '.github.io',
+            path: pt,
+            message: 'a new commit message',
+            committer: {
+                name: json.userName,
+                email: em
+            },
+            content: ct,
+            sha: sa
+        })
     }
     // 读取文件信息的函数
     async function octokitGet(tk, pt) {
@@ -55,27 +56,28 @@ window.onload = function () {
         const octokit = new Octokit({
             auth: tk
         });
-        useJson("./config/config.json", function () {
-            window.out = octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-                owner: json.userName,
-                repo: json.userName + ".github.io",
-                path: pt
-            });
+
+        window.out = octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+            owner: configJson.userName,
+            repo: configJson.userName + ".github.io",
+            path: pt
         });
+
         function res() {
             return window.out.then((rs) => { return rs })
         }
         let result = await res();
         return result.data;
     }
-    async function octokitDelete(tk, pt,em,sa) {
+    // 删除文件的函数
+    async function octokitDelete(tk, pt, em, sa) {
         const octokit = new Octokit({
             auth: tk
         })
 
         octokit.request('DELETE /repos/{owner}/{repo}/contents/{path}', {
             owner: configJson.userName,
-            repo: configJson.userName+".github.io",
+            repo: configJson.userName + ".github.io",
             path: pt,
             message: "删除文件",
             committer: {
@@ -264,8 +266,11 @@ window.onload = function () {
     });
     // 改变markdown大小
     let main = document.getElementById("main");
+    let writing = document.getElementById("writing");
+    let pushE = document.getElementById("push");
     main.style.width = window.innerWidth - 200 + "px";
     main.style.height = window.innerHeight + "px";
+    writing.style.width = main.offsetWidth - 270 + "px";
     window.onresize = function () {
         let main = document.getElementById("main");
         let writing = document.getElementById("writing");
@@ -275,6 +280,7 @@ window.onload = function () {
         main.style.width = window.innerWidth - 200 + "px";
         main.style.height = window.innerHeight + "px";
         writing.style.height = window.innerHeight - 2 + "px";
+        writing.style.width = main.offsetWidth - pushE.offsetWidth + "px";
         pushE.style.height = window.innerHeight + "px"
         oldPush.style.height = window.innerHeight + "px"
         oldWriting.style.height = window.innerHeight - 2 + "px";
@@ -294,9 +300,7 @@ window.onload = function () {
     }
     // 加载默认作者
     var authorE = document.getElementById("author");
-    useJson("../page/config/config.json", function () {
-        authorE.value = json.userName;
-    });
+    authorE.value = configJson.userName;
     // 提交功能的实现
     let commit = document.getElementById("commit");
     commit.onclick = async function () {
@@ -324,7 +328,6 @@ window.onload = function () {
             let newDate = Year + "/" + Month + "/" + Day;
             // console.log(newDate);
             // 判断第几篇文章
-            var indexJson = await useJson("../paper/index.json", function () { });
             var i = 1;
             while (1) {
                 // i++;
@@ -451,6 +454,7 @@ window.onload = function () {
                 let newPath = "paper/" + newDate + "/" + paperNum + ".md"
                 let pushContent = turnBase64(nweContent);
                 octokitPush(gToken, newPath, "3099729829@qq.com", "", pushContent);
+                indexJson = useJson("https://raw.githubusercontent.com/" + configJson.userName + "/" + configJson.userName + ".github.io/main/paper/index.json", function () { });
             }
         }
     }
@@ -471,7 +475,7 @@ window.onload = function () {
         mainOldPush.style.display = "none";
         mainOldWriting.style.display = "none";
         // 点击后加载文章列表
-        var indexJson = useJson("../paper/index.json", function () {
+        indexJson = useJson("https://raw.githubusercontent.com/" + configJson.userName + "/" + configJson.userName + ".github.io/main/paper/index.json", function () {
             var paperIndex = json.index;
             let PaperList = document.getElementsByClassName("paper-list")[0];
             PaperList.innerHTML = "";
@@ -489,32 +493,32 @@ window.onload = function () {
                 paperDelete[c].onclick = async function () {
                     // 获取对应文章信息
                     let mdUrl = this.className;
-                    let mdPath = "paper/" + mdUrl.replace("paper-delete ", "").replace(/-/g,"/") + ".md";
+                    let mdPath = "paper/" + mdUrl.replace("paper-delete ", "").replace(/-/g, "/") + ".md";
                     // console.log(indexJson.index.length);
                     // 查找index.json中相关位置
                     let Year = mdUrl.replace("paper-delete ", "").match(/[0-9]{4}/)[0];
                     let Month = mdUrl.replace("paper-delete ", "").replace(/-/g, "").match(/[0-9]{6}/)[0].replace(Year, "");
                     let Day = mdUrl.replace("paper-delete ", "").replace(/-/g, "").match(/[0-9]{8}/)[0].replace(Year, "").replace(Month, "");
                     let Page = mdUrl.replace("paper-delete ", "").replace(/-/g, "").replace(Year, "").replace(Month, "").replace(Day, "");
-                    for(let q=0;q<indexJson.index.length;q++){
+                    for (let q = 0; q < indexJson.index.length; q++) {
                         let deletePageIndex = indexJson.index[q];
                         // console.log(deletePageIndex.year)
-                        if((Year+Month+Day+Page+"")==(deletePageIndex.year+deletePageIndex.month+deletePageIndex.day+deletePageIndex.paper+"")){
+                        if ((Year + Month + Day + Page + "") == (deletePageIndex.year + deletePageIndex.month + deletePageIndex.day + deletePageIndex.paper + "")) {
                             var deletePageIndexNum = q;
                             break
                         }
                     }
                     // 获取md文件sha
-                    let deleteMdSha = await octokitGet(readToken(),mdPath);
+                    let deleteMdSha = await octokitGet(readToken(), mdPath);
                     // 获取index.json文件sha
-                    let updateIndexJsonSha = await octokitGet(readToken(),"paper/index.json");
+                    let updateIndexJsonSha = await octokitGet(readToken(), "paper/index.json");
                     // 删除确认提示框
-                    let deletePrompt = prompt("您正在删除文章《"+ indexJson.index[deletePageIndexNum].title +"》，确认删除请在对话框中输入文件的sha并点击确认删除。sha："+ deleteMdSha.sha);
-                    if(deletePrompt==deleteMdSha.sha){
-                        indexJson.index.splice(deletePageIndexNum,1);
+                    let deletePrompt = prompt("您正在删除文章《" + indexJson.index[deletePageIndexNum].title + "》，确认删除请在对话框中输入文件的sha并点击确认删除。sha：" + deleteMdSha.sha);
+                    if (deletePrompt == deleteMdSha.sha) {
+                        indexJson.index.splice(deletePageIndexNum, 1);
                         delete indexJson.search[Year][Month][Day][Page];
-                        octokitPush(readToken(),"paper/index.json","3099729829@qq.com",updateIndexJsonSha.sha,turnBase64(JSON.stringify(indexJson)));
-                        octokitDelete(readToken(),mdPath,"3099729829@qq.com",deleteMdSha.sha);
+                        octokitPush(readToken(), "paper/index.json", "3099729829@qq.com", updateIndexJsonSha.sha, turnBase64(JSON.stringify(indexJson)));
+                        octokitDelete(readToken(), mdPath, "3099729829@qq.com", deleteMdSha.sha);
                         // console.log(indexJson);
                     }
                 }
@@ -538,7 +542,7 @@ window.onload = function () {
                     let pushE = document.getElementById("push");
                     mainOldPush.innerHTML = '<h4>标题:</h4><input class="oldTitle"><h4>封面：</h4><div class="oldCover"></div><input type="file" name="" class="coverFile"><h4>摘要:</h4><textarea name="" cols="30" rows="10" class="summary"></textarea><h4>作者:</h4><input class="author"><div class="commit">提交</div>';
                     // 改变标题、封面、作者、摘要元素中的内容
-                    var paperIndexSearch = await useJson("../paper/index.json", function () { }).search;
+                    var paperIndexSearch = indexJson.search;
                     let Year = this.className.replace("paper-alter ", "").match(/[0-9]{4}/)[0];
                     let Month = this.className.replace("paper-alter ", "").replace(/-/g, "").match(/[0-9]{6}/)[0].replace(Year, "");
                     let Day = this.className.replace("paper-alter ", "").replace(/-/g, "").match(/[0-9]{8}/)[0].replace(Year, "").replace(Month, "");
@@ -621,7 +625,7 @@ window.onload = function () {
                             let Month = pN.slice(4, 6);
                             let Day = pN.slice(6, 8);
                             let Paper = pN.slice(8);
-                            let paperIndexIndex = useJson("../paper/index.json", function () { });
+                            let paperIndexIndex = indexJson;
                             paperIndexIndex = paperIndexIndex.index;
                             // let x =[];
                             for (let i = 0; i < paperIndexIndex.length; i++) {
