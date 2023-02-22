@@ -166,7 +166,7 @@ window.onload = async function () {
         }
     }
 
-    LoadMorePaper(3, mainContainerIndexJsonIndex);
+    LoadMorePaper(configJson.loadPageNum, mainContainerIndexJsonIndex);
 
     // 判断是否还有可加载的文章
     if (mainContainerIndexJsonIndex.length > 0) {
@@ -175,7 +175,7 @@ window.onload = async function () {
         let LoadMoreBtn = document.getElementsByClassName("LoadMore")[0];
         LoadMoreBtn.onclick = function () {
             // 点击后加载剩余文章
-            LoadMorePaper(3, mainContainerIndexJsonIndex);
+            LoadMorePaper(configJson.loadPageNum, mainContainerIndexJsonIndex);
             // 如果没有可加载内容则隐藏加载按钮
             if (mainContainerIndexJsonIndex.length <= 0) {
                 LoadMoreBtn.style.display = "none";
