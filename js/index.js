@@ -16,9 +16,10 @@ window.onload = async function () {
     // 加载config.json文件
     var configJson = useJson("../page/config/config.json", function () { });
     // console.log(configJson);
-    configJson = useJson("https://raw.githubusercontent.com/" + configJson["userName"] + "/" + configJson["userName"] + ".github.io/main/page/config/config.json", function () { });
+    // configJson = useJson("https://cdn.jsdelivr.net/" + configJson["userName"] + "/" + configJson["userName"] + ".github.io/main/page/config/config.json", function () { });
     // 加载index.json文件
-    var indexJson = useJson("https://raw.githubusercontent.com/" + configJson["userName"] + "/" + configJson["userName"] + ".github.io/main/paper/index.json", function () { });
+    // var indexJson = useJson("https://cdn.jsdelivr.net/" + configJson["userName"] + "/" + configJson["userName"] + ".github.io/main/paper/index.json", function () { });
+    var indexJson = useJson("../paper/index.json", function () { });
 
     // 读取cookie中token的函数
     function readToken() {
@@ -77,79 +78,98 @@ window.onload = async function () {
     sidebar.style.height = showcaseHeight - 75 + "px"
     // document.documentElement.clientWidth=window.innerWidth;
     // 获取归档json，以生成归档
-        indexYear = [0];
-        indexMonth = [0];
-        // console.log(json.search.length)
-        for (a = 0; a < json.index.length; a++) {
-            let index = indexJson.index;
-            // console.log(index);
-            var x = index[a].year;
-            var c = index[a].month;
-            var e = index[a].day;
-            var t = index[a].title;
-            var y = 1;
-            var m = 1;
-            for (b = 0; b < indexYear.length; b++) {
-                if (x == indexYear[b]) {
-                    y = 0;
-                }
-            }
-            if (y == 1) {
-                indexYear.push(x);
-                indexMonth = [0];
-                var archive = document.getElementById("archive")
-                archive.innerHTML = archive.innerHTML + '<div class="aYear ' + x + '">' + x + '年' + '</div>'
-            }
-            // 有相同的年份则进行判定月份
-            for (z = 0; z < indexMonth.length; z++) {
-                if (c == indexMonth[z]) {
-                    m = 0;
-                }
-            }
-            if (m == 1) {
-                indexMonth.push(c);
-                indexDay = [0];
-                var aYear = document.getElementsByClassName(x)[0];
-                aYear.innerHTML = aYear.innerHTML + '<div class="aMonth ' + c + '">' + c + '月' + '</div>';
-            }
-            // 日期+标题
-            for (q = 0; q < indexDay.length; q++) {
-                var aMonth = document.getElementsByClassName(x)[0].getElementsByClassName(c)[0];
-                aMonth.innerHTML = aMonth.innerHTML + '<div class="aDay ' + e + '">' + e + '日 · ' + t + '</div>';
+    indexYear = [0];
+    indexMonth = [0];
+    // console.log(json.search.length)
+    for (a = 0; a < json.index.length; a++) {
+        let index = indexJson.index;
+        // console.log(index);
+        var x = index[a].year;
+        var c = index[a].month;
+        var e = index[a].day;
+        var t = index[a].title;
+        var y = 1;
+        var m = 1;
+        for (b = 0; b < indexYear.length; b++) {
+            if (x == indexYear[b]) {
+                y = 0;
             }
         }
-        // 歸檔完成後高度修正
+        if (y == 1) {
+            indexYear.push(x);
+            indexMonth = [0];
+            var archive = document.getElementById("archive")
+            archive.innerHTML = archive.innerHTML + '<div class="aYear ' + x + '">' + x + '年' + '</div>'
+        }
+        // 有相同的年份则进行判定月份
+        for (z = 0; z < indexMonth.length; z++) {
+            if (c == indexMonth[z]) {
+                m = 0;
+            }
+        }
+        if (m == 1) {
+            indexMonth.push(c);
+            indexDay = [0];
+            var aYear = document.getElementsByClassName(x)[0];
+            aYear.innerHTML = aYear.innerHTML + '<div class="aMonth ' + c + '">' + c + '月' + '</div>';
+        }
+        // 日期+标题
+        for (q = 0; q < indexDay.length; q++) {
+            var aMonth = document.getElementsByClassName(x)[0].getElementsByClassName(c)[0];
+            aMonth.innerHTML = aMonth.innerHTML + '<div class="aDay ' + e + '">' + e + '日 · ' + t + '</div>';
+        }
+    }
+    // 歸檔完成後高度修正
     // 加载发现页部分
-        var mainPaper = document.getElementById("main");
-        for (i = 0; i < indexJson.index.length; i++) {
-            index = indexJson.index[i];
-            paperDate = "";
-            if (i % 2 != 0) {
-                x = "left"
-            } else {
-                x = "right"
-            }
-            paperDate = index.year + '-' + index.month + '-' + index.day;
-            paperUrl = paperDate + "-" + index.paper;
-            paperTitle = index.title;
-            let summaryC = index.summary;
-            mainPaper.innerHTML += '<div class="post ' + x + " " + paperUrl + '"><div class="post-thumb"></div><div class="post-content-wrap"><div class="post-content"><div class="post-date">' + paperDate + '</div><div class="post-title">' + paperTitle + '</div><div class="post-mate"></div><div class="float-content">' + summaryC + '</div></div><div class="beautify"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>';
-            thisPaper = document.getElementsByClassName(paperUrl)[0].getElementsByClassName("post-thumb")[0];
-            thisPaper.style.backgroundImage = 'url(' + index.image + ')';
+    var mainPaper = document.getElementById("main");
+    // 分页加载，默认一次加载5篇（之后改）
+    var mainContainerIndexJsonIndex = indexJson.index;
+    if (mainContainerIndexJsonIndex.length > 5) {
+        var nowLoadPaperArray = mainContainerIndexJsonIndex.reverse().splice(0, 5);
+    } else {
+        var nowLoadPaperArray = mainContainerIndexJsonIndex.reverse().splice(0, mainContainerIndexJsonIndex.length);
+    }
+    console.log(nowLoadPaperArray);
+    for (i = 0; i < nowLoadPaperArray.length; i++) {
+        index = nowLoadPaperArray[i];
+        paperDate = "";
+        if (i % 2 != 0) {
+            x = "left"
+        } else {
+            x = "right"
         }
-        // 绑定点击事件
-        var paperPost = document.getElementsByClassName("post");
-        for (i = 0; i < paperPost.length; i++) {
-            paperPost[i].onclick = function () {
-                var v = "";
-                openPaperUrl = this.className.match(/[0-9]|-/ig);
-                for (z = 0; z < openPaperUrl.length; z++) {
-                    v += openPaperUrl[z];
-                    // console.log(v);
-                }
-                window.open("./page/paper.html?number=" + v);
+        paperDate = index.year + '-' + index.month + '-' + index.day;
+        paperUrl = paperDate + "-" + index.paper;
+        paperTitle = index.title;
+        let summaryC = index.summary;
+        mainPaper.innerHTML += '<div class="post ' + x + " " + paperUrl + '"><div class="post-thumb"></div><div class="post-content-wrap"><div class="post-content"><div class="post-date">' + paperDate + '</div><div class="post-title">' + paperTitle + '</div><div class="post-mate"></div><div class="float-content">' + summaryC + '</div></div><div class="beautify"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>';
+        thisPaper = document.getElementsByClassName(paperUrl)[0].getElementsByClassName("post-thumb")[0];
+        thisPaper.style.backgroundImage = 'url(' + index.image + ')';
+    }
+    // 绑定点击事件
+    var paperPost = document.getElementsByClassName("post");
+    for (i = 0; i < paperPost.length; i++) {
+        paperPost[i].onclick = function () {
+            var v = "";
+            openPaperUrl = this.className.match(/[0-9]|-/ig);
+            for (z = 0; z < openPaperUrl.length; z++) {
+                v += openPaperUrl[z];
+                // console.log(v);
             }
+            window.open("./page/paper.html?number=" + v);
         }
+    }
+    // 判断是否还有可加载的文章
+    if (mainContainerIndexJsonIndex > 0) {
+        // 添加一个加载按钮
+        mainPaper.innerHTML += "<div class='LoadMore'>Load</div>";
+        let LoadMoreBtn = document.getElementsByClassName("LoadMore")[0];
+        LoadMoreBtn.onclick = function(){
+            // 点击后加载剩余文章
+            
+        }
+    }
+
     // 侧边栏功能
     // 引入config.json完成部分页面
     // 顺便完成网站标题和图标、欢迎词

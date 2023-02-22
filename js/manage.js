@@ -39,11 +39,11 @@ window.onload = function () {
         let name = configJson.userName;
         octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
             owner: name,
-            repo: json.userName + '.github.io',
+            repo: name+ '.github.io',
             path: pt,
             message: 'a new commit message',
             committer: {
-                name: json.userName,
+                name: name,
                 email: em
             },
             content: ct,
