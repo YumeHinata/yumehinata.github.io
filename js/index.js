@@ -54,6 +54,7 @@ window.onload = async function () {
         // return gitUser
     }
     // 橱窗大小随着窗口变化
+    document.getElementById("showcase").style.backgroundImage = "url('"+configJson.showcase+"')";
     window.onresize = function () {
         var showcaseHeight = window.innerHeight;
         let showcase = document.getElementById("showcase");

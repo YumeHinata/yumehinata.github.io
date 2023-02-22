@@ -247,14 +247,15 @@ window.onload = function () {
         let pushImgIndexContent = turnBase64(imgIndexContent);
         // 获取token
         let token = readToken();
+        let email = configJson.email;
         // 获取图片目录sha
         let imgIndexSha = await octokitGet(token, "img/index.json");
         // 上传目录
-        octokitPush(token, "img/index.json", "3099729829@qq.com", imgIndexSha.sha, pushImgIndexContent);
+        octokitPush(token, "img/index.json", email, imgIndexSha.sha, pushImgIndexContent);
         // console.log(imgIndexSha.sha);
         // 上传图片
         let pccc = pcc.match(/(base64,(\S*)"\))/)[2]
-        octokitPush(token, imgPath, "3099729829@qq.com", "", pccc);
+        octokitPush(token, imgPath, email, "", pccc);
         // console.log(pcc)
         return imgPath
     }
@@ -449,11 +450,11 @@ window.onload = function () {
                 // console.log(octGet.sha);
                 // console.log(indexContent);
                 let pushIndexContent = turnBase64(indexContent);
-                octokitPush(gToken, "paper/index.json", "3099729829@qq.com", octGet.sha, pushIndexContent);
+                octokitPush(gToken, "paper/index.json", configJson.email, octGet.sha, pushIndexContent);
                 // 写入新的文章
                 let newPath = "paper/" + newDate + "/" + paperNum + ".md"
                 let pushContent = turnBase64(nweContent);
-                octokitPush(gToken, newPath, "3099729829@qq.com", "", pushContent);
+                octokitPush(gToken, newPath, configJson.email, "", pushContent);
                 indexJson = useJson("https://raw.githubusercontent.com/" + configJson.userName + "/" + configJson.userName + ".github.io/main/paper/index.json", function () { });
             }
         }
@@ -517,8 +518,8 @@ window.onload = function () {
                     if (deletePrompt == deleteMdSha.sha) {
                         indexJson.index.splice(deletePageIndexNum, 1);
                         delete indexJson.search[Year][Month][Day][Page];
-                        octokitPush(readToken(), "paper/index.json", "3099729829@qq.com", updateIndexJsonSha.sha, turnBase64(JSON.stringify(indexJson)));
-                        octokitDelete(readToken(), mdPath, "3099729829@qq.com", deleteMdSha.sha);
+                        octokitPush(readToken(), "paper/index.json", configJson.email, updateIndexJsonSha.sha, turnBase64(JSON.stringify(indexJson)));
+                        octokitDelete(readToken(), mdPath, configJson.email, deleteMdSha.sha);
                         // console.log(indexJson);
                     }
                 }
@@ -672,8 +673,8 @@ window.onload = function () {
                             let pushPaperIndexContent = turnBase64(paperIndexContent);
                             // console.log(paperIndexContent);
                             // 提交修改后的md文件、文章目录json
-                            octokitPush(readToken(), paperNumber.replace("../", ""), "3099729829@qq.com", mdSha.sha, pushOldWritingContent);
-                            octokitPush(readToken(), "paper/index.json", "3099729829@qq.com", paperIndexSha, pushPaperIndexContent);
+                            octokitPush(readToken(), paperNumber.replace("../", ""), configJson.email, mdSha.sha, pushOldWritingContent);
+                            octokitPush(readToken(), "paper/index.json", configJson.email, paperIndexSha, pushPaperIndexContent);
                             // console.log(paperIndexContent);
                         }
                     }
