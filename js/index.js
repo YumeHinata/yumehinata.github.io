@@ -54,7 +54,7 @@ window.onload = async function () {
         // return gitUser
     }
     // 橱窗大小随着窗口变化
-    document.getElementById("showcase").style.backgroundImage = "url('"+configJson.showcase+"')";
+    document.getElementById("showcase").style.backgroundImage = "url('" + configJson.showcase + "')";
     window.onresize = function () {
         var showcaseHeight = window.innerHeight;
         let showcase = document.getElementById("showcase");
@@ -122,52 +122,63 @@ window.onload = async function () {
     }
     // 歸檔完成後高度修正
     // 加载发现页部分
-    var mainPaper = document.getElementById("main");
-    // 分页加载，默认一次加载5篇（之后改）
+    var mainContainer = document.getElementById("main-container");
+    // 分页加载
     var mainContainerIndexJsonIndex = indexJson.index;
-    if (mainContainerIndexJsonIndex.length > 5) {
-        var nowLoadPaperArray = mainContainerIndexJsonIndex.reverse().splice(0, 5);
-    } else {
-        var nowLoadPaperArray = mainContainerIndexJsonIndex.reverse().splice(0, mainContainerIndexJsonIndex.length);
-    }
-    console.log(nowLoadPaperArray);
-    for (i = 0; i < nowLoadPaperArray.length; i++) {
-        index = nowLoadPaperArray[i];
-        paperDate = "";
-        if (i % 2 != 0) {
-            x = "left"
+    function LoadMorePaper(loadPageNum, loadContent) {
+        var mainPaper = document.getElementById("main");
+        if (loadContent.length > loadPageNum) {
+            var nowLoadPaperArray = loadContent.reverse().splice(0, loadPageNum);
         } else {
-            x = "right"
+            var nowLoadPaperArray = loadContent.reverse().splice(0, loadContent.length);
         }
-        paperDate = index.year + '-' + index.month + '-' + index.day;
-        paperUrl = paperDate + "-" + index.paper;
-        paperTitle = index.title;
-        let summaryC = index.summary;
-        mainPaper.innerHTML += '<div class="post ' + x + " " + paperUrl + '"><div class="post-thumb"></div><div class="post-content-wrap"><div class="post-content"><div class="post-date">' + paperDate + '</div><div class="post-title">' + paperTitle + '</div><div class="post-mate"></div><div class="float-content">' + summaryC + '</div></div><div class="beautify"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>';
-        thisPaper = document.getElementsByClassName(paperUrl)[0].getElementsByClassName("post-thumb")[0];
-        thisPaper.style.backgroundImage = 'url(' + index.image + ')';
-    }
-    // 绑定点击事件
-    var paperPost = document.getElementsByClassName("post");
-    for (i = 0; i < paperPost.length; i++) {
-        paperPost[i].onclick = function () {
-            var v = "";
-            openPaperUrl = this.className.match(/[0-9]|-/ig);
-            for (z = 0; z < openPaperUrl.length; z++) {
-                v += openPaperUrl[z];
-                // console.log(v);
+        // console.log(nowLoadPaperArray);
+        for (i = 0; i < nowLoadPaperArray.length; i++) {
+            index = nowLoadPaperArray[i];
+            paperDate = "";
+            if (i % 2 != 0) {
+                x = "left"
+            } else {
+                x = "right"
             }
-            window.open("./page/paper.html?number=" + v);
+            paperDate = index.year + '-' + index.month + '-' + index.day;
+            paperUrl = paperDate + "-" + index.paper;
+            paperTitle = index.title;
+            let summaryC = index.summary;
+            mainPaper.innerHTML += '<div class="post ' + x + " " + paperUrl + '"><div class="post-thumb"></div><div class="post-content-wrap"><div class="post-content"><div class="post-date">' + paperDate + '</div><div class="post-title">' + paperTitle + '</div><div class="post-mate"></div><div class="float-content">' + summaryC + '</div></div><div class="beautify"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>';
+            // console.log(document.getElementsByClassName(paperUrl)[0]);
+            thisPaper = document.getElementsByClassName(paperUrl)[0].getElementsByClassName("post-thumb")[0];
+            thisPaper.style.backgroundImage = 'url(' + index.image + ')';
+        }
+        // 绑定点击事件
+        var paperPost = document.getElementsByClassName("post");
+        for (i = 0; i < paperPost.length; i++) {
+            paperPost[i].onclick = function () {
+                var v = "";
+                openPaperUrl = this.className.match(/[0-9]|-/ig);
+                for (z = 0; z < openPaperUrl.length; z++) {
+                    v += openPaperUrl[z];
+                    // console.log(v);
+                }
+                window.open("./page/paper.html?number=" + v);
+            }
         }
     }
+
+    LoadMorePaper(3, mainContainerIndexJsonIndex);
+    // console.log(mainContainerIndexJsonIndex);
     // 判断是否还有可加载的文章
-    if (mainContainerIndexJsonIndex > 0) {
+    if (mainContainerIndexJsonIndex.length > 0) {
         // 添加一个加载按钮
-        mainPaper.innerHTML += "<div class='LoadMore'>Load</div>";
+        mainContainer.innerHTML += "<div class='LoadMore'>More</div>";
         let LoadMoreBtn = document.getElementsByClassName("LoadMore")[0];
-        LoadMoreBtn.onclick = function(){
+        LoadMoreBtn.onclick = function () {
             // 点击后加载剩余文章
-            
+            LoadMorePaper(3, mainContainerIndexJsonIndex);
+            // 如果没有可加载内容则隐藏加载按钮
+            if (mainContainerIndexJsonIndex.length <= 0) {
+                LoadMoreBtn.style.display = "none";
+            }
         }
     }
 
