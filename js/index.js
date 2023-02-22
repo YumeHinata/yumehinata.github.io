@@ -133,6 +133,7 @@ window.onload = async function () {
             var nowLoadPaperArray = loadContent.reverse().splice(0, loadContent.length);
         }
         // console.log(nowLoadPaperArray);
+        loadContent.reverse();
         for (i = 0; i < nowLoadPaperArray.length; i++) {
             index = nowLoadPaperArray[i];
             paperDate = "";
@@ -166,7 +167,7 @@ window.onload = async function () {
     }
 
     LoadMorePaper(3, mainContainerIndexJsonIndex);
-    // console.log(mainContainerIndexJsonIndex);
+
     // 判断是否还有可加载的文章
     if (mainContainerIndexJsonIndex.length > 0) {
         // 添加一个加载按钮
@@ -179,6 +180,7 @@ window.onload = async function () {
             if (mainContainerIndexJsonIndex.length <= 0) {
                 LoadMoreBtn.style.display = "none";
             }
+            console.log(mainContainerIndexJsonIndex);
         }
     }
 
