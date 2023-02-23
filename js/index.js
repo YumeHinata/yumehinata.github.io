@@ -20,7 +20,7 @@ window.onload = async function () {
     // 加载index.json文件
     // var indexJson = useJson("https://cdn.jsdelivr.net/" + configJson["userName"] + "/" + configJson["userName"] + ".github.io/main/paper/index.json", function () { });
     var indexJson = useJson("../paper/index.json", function () { });
-    document.getElementsByTagName("head")[0].innerHTML += '<link rel="icon" href="'+configJson.favicon+'" type="image/x-icon"/>';
+    document.getElementsByTagName("head")[0].innerHTML += '<link rel="icon" href="' + configJson.favicon + '" type="image/x-icon"/>';
     // 读取cookie中token的函数
     function readToken() {
         token = "";
@@ -56,28 +56,35 @@ window.onload = async function () {
     // 橱窗大小随着窗口变化
     document.getElementById("showcase").style.backgroundImage = "url('" + configJson.showcase + "')";
     window.onresize = function () {
+        if (window.innerWidth >= 905) {
+            var showcaseHeight = window.innerHeight;
+            let showcase = document.getElementById("showcase");
+            showcase.style.height = showcaseHeight + "px";
+            let sidebar = document.getElementById("sidebar");
+            sidebar.style.height = showcaseHeight - 75 + "px"
+            let archive = document.getElementById("archive");
+            let account = document.getElementById("account");
+            archive.style.height = sidebar.offsetHeight - account.offsetHeight + "px";
+        }
+
+        // document.documentElement.clientWidth=window.innerWidth;
+    }
+    if (window.innerWidth >= 905) {
+        $("#archive").on('DOMNodeInserted', function () {
+            let sidebar = document.getElementById("sidebar");
+            sidebar.style.height = showcaseHeight - 75 + "px"
+            let archive = document.getElementById("archive");
+            let account = document.getElementById("account");
+            archive.style.height = sidebar.offsetHeight - account.offsetHeight + "px";
+        });
         var showcaseHeight = window.innerHeight;
         let showcase = document.getElementById("showcase");
         showcase.style.height = showcaseHeight + "px";
         let sidebar = document.getElementById("sidebar");
         sidebar.style.height = showcaseHeight - 75 + "px"
-        let archive = document.getElementById("archive");
-        let account = document.getElementById("account");
-        archive.style.height = sidebar.offsetHeight - account.offsetHeight + "px";
     }
-    $("#archive").on('DOMNodeInserted', function () {
-        let sidebar = document.getElementById("sidebar");
-        sidebar.style.height = showcaseHeight - 75 + "px"
-        let archive = document.getElementById("archive");
-        let account = document.getElementById("account");
-        archive.style.height = sidebar.offsetHeight - account.offsetHeight + "px";
-    });
-    var showcaseHeight = window.innerHeight;
-    let showcase = document.getElementById("showcase");
-    showcase.style.height = showcaseHeight + "px";
-    let sidebar = document.getElementById("sidebar");
-    sidebar.style.height = showcaseHeight - 75 + "px"
-    // document.documentElement.clientWidth=window.innerWidth;
+
+
     // 获取归档json，以生成归档
     indexYear = [0];
     indexMonth = [0];
@@ -154,7 +161,9 @@ window.onload = async function () {
         // 绑定点击事件
         var paperPost = document.getElementsByClassName("post");
         for (i = 0; i < paperPost.length; i++) {
+            // console.log(paperPost[i].onclick)
             paperPost[i].onclick = function () {
+                // console.log(1);
                 var v = "";
                 openPaperUrl = this.className.match(/[0-9]|-/ig);
                 for (z = 0; z < openPaperUrl.length; z++) {
@@ -163,6 +172,7 @@ window.onload = async function () {
                 }
                 window.open("./page/paper.html?number=" + v);
             }
+            // console.log(paperPost[i].onclick())
         }
     }
 
@@ -180,10 +190,25 @@ window.onload = async function () {
             if (mainContainerIndexJsonIndex.length <= 0) {
                 LoadMoreBtn.style.display = "none";
             }
-            console.log(mainContainerIndexJsonIndex);
+            // console.log(mainContainerIndexJsonIndex);
         }
     }
-
+    // 绑定点击事件
+    var paperPost = document.getElementsByClassName("post");
+    for (i = 0; i < paperPost.length; i++) {
+        // console.log(paperPost[i].onclick)
+        paperPost[i].onclick = function () {
+            // console.log(1);
+            var v = "";
+            openPaperUrl = this.className.match(/[0-9]|-/ig);
+            for (z = 0; z < openPaperUrl.length; z++) {
+                v += openPaperUrl[z];
+                // console.log(v);
+            }
+            window.open("./page/paper.html?number=" + v);
+        }
+        // console.log(paperPost[i].onclick())
+    }
     // 侧边栏功能
     // 引入config.json完成部分页面
     // 顺便完成网站标题和图标、欢迎词

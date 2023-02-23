@@ -532,4 +532,81 @@
     .down{
         display: none;
     }
+    #showcase{
+        width: 100vw;
+        height: 45vw;
+        .glass{
+            .showcase-container{
+                #welcome{
+                    font-size: 6vw;
+                }
+                #welcome::after,
+                #welcome::before{
+                    display: none;
+                }
+            }
+        }
+    }
+    #primary{
+        width: 100vw;
+        // margin: 0;
+    }
+    #main-container{
+        width: 100vw;
+        padding: 0;
+        h4{
+            margin-top: 10vw;
+            width: 90vw;
+            font-size: 3vw;
+            margin-bottom: 0;
+        }
+        .LoadMore{
+            margin-top: 4vw;
+            margin-bottom: 2vw;
+            width: 10vw;
+            height: 5vw;
+            font-size: 2vw;
+            line-height: 5vw;
+        }
+    }
+    #main{
+        .post{
+            width: 80vw;
+            height: 30.55vw;
+        }
+        .post-thumb{
+            width: 49.44vw;
+            height: 30.55vw;
+        }
+        .post-content-wrap{
+            width: 30.55vw;
+            height: 30.55vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            .beautify{
+                display: none;
+            }
+            .post-content{
+                margin: 2vw 4vw;
+                .post-date{
+                    font-size: .1vw;
+                }
+                .post-title{
+                    margin-top: 1vw;
+                    font-size: 4vw;
+                    -webkit-line-clamp:3;
+                    font-weight: bolder;
+                }
+                .float-content{
+                    font-size: 2vw;
+                    margin-top: 0.6vw;
+                    // line-height: 0.2vw;
+                    display: none;
+                }
+            }
+        }
+        
+    }
+    
 }
