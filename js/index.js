@@ -65,8 +65,10 @@ window.onload = async function () {
             let archive = document.getElementById("archive");
             let account = document.getElementById("account");
             archive.style.height = sidebar.offsetHeight - account.offsetHeight + "px";
+        }else if(window.innerWidth < 905){
+            let showcase = document.getElementById("showcase");
+            showcase.style.height = 45 + "vw";
         }
-
         // document.documentElement.clientWidth=window.innerWidth;
     }
     if (window.innerWidth >= 905) {
@@ -83,7 +85,6 @@ window.onload = async function () {
         let sidebar = document.getElementById("sidebar");
         sidebar.style.height = showcaseHeight - 75 + "px"
     }
-
 
     // 获取归档json，以生成归档
     indexYear = [0];
