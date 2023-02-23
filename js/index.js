@@ -20,7 +20,7 @@ window.onload = async function () {
     // 加载index.json文件
     // var indexJson = useJson("https://cdn.jsdelivr.net/" + configJson["userName"] + "/" + configJson["userName"] + ".github.io/main/paper/index.json", function () { });
     var indexJson = useJson("../paper/index.json", function () { });
-
+    document.getElementsByTagName("head")[0].innerHTML += '<link rel="icon" href="'+configJson.favicon+'" type="image/x-icon"/>';
     // 读取cookie中token的函数
     function readToken() {
         token = "";
